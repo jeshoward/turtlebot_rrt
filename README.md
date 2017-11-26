@@ -7,6 +7,9 @@ This plugin implements a simulated Randomly Exploring Random Tree (RRT) path pla
 - [Personnel](#personnel)
 - [Installation](#installation)
 - [Usage](#usage)
+- [API and Documentation](#api)
+- [Known Issues and Bugs](#issues)
+
 - [License](#license)
 
 ## Personnel
@@ -21,12 +24,25 @@ cd ..
 catkin_make
 ```
 
-### Requirements
+### Dependencies
 1. ROS Kinetic Kame [(Installation Instructions)](docs/README_DEPENDENCIES.md#ros)
 2. Catkin [(Installation Instructions)](docs/README_DEPENDENCIES.md#catkin)
 3. Rviz [(Installation Instructions)](/docs/README_DEPENDENCIES.md#rviz)
-
+4. Gazebo [(Installation Instructions)](/docs/README_DEPENDENCIES.dm#gazebo)
 ## Usage
+TODO
+
+### Demo Steps
+TODO
+
+### Test Steps
+TODO
+
+## Issues
+TODO
+
+## API
+TODO
 
 ## License
 BSD 3-Clause License
