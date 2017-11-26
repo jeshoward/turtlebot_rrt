@@ -8,8 +8,19 @@ This plugin implements a simulated Randomly Exploring Random Tree (RRT) path pla
 - [Licensing](#licensing)
 
 ## Personnel
+This plugin was created by [Jessica Howard](jmhoward@umd.edu) as a final project for the University of Maryland course ENPM808X - Software Development for Robotics during the Fall 2017 semester.
 
 ## Installation
+Clone the package into your catkin workspace:
+```
+cd [workspace]/src
+git clone https://github.com/jeshoward/turtlebot_rrt.git
+cd ..
+catkin_make
+```
+
+### Requirements
+1. ROS Kinetic Kame [(Installation Instructions)](https://github.com/jeshoward/turtlebot_rrt/README_DEPENDENCIES.md#ROS)
 
 ## Usage
 
