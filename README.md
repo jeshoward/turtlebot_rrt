@@ -9,7 +9,7 @@ This plugin implements a simulated Randomly Exploring Random Tree (RRT) path pla
 - [Usage](#usage)
 - [API and Documentation](#api)
 - [Known Issues and Bugs](#issues)
-
+- [SIP Status](#sip)
 - [License](#license)
 
 ## Personnel
@@ -44,6 +44,12 @@ TODO
 
 ## API
 TODO
+
+## SIP
+Project status is primarily tracked in Jira, but periodic exports can be found at the following links:
+- [Sprint Backlog](https://docs.google.com/spreadsheets/d/11MImRGM0dvr5bSlyq22xXTaM7s8ReXDSpWUyN7IlM3k/edit?usp=sharing)
+- [Work log](https://docs.google.com/spreadsheets/d/1vbmrd5M_VRwjS0JJZlJ9-kgfT73sLaau8BvXtaG-N3M/edit?usp=sharing)
+- [Sprint Planning Notes](https://docs.google.com/document/d/175Ea56UEoEn6o_A4oEjhvzU04l2S9aK262BWnC1AG4U/edit?usp=sharing)
 
 ## License
 BSD 3-Clause License
