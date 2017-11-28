@@ -18,7 +18,19 @@ before_install:
   - sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
   - sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
   - sudo apt-get update -qq
-  - sudo apt-get install ros-$ROS_DISTRO-ros-base python-rosinstall python-rosinstall-generator python-wstool build-essential ros-$ROS_DISTRO-catkin cmake python-catkin-pkg python-empty python-nose python-setuptools libgtest-dev
+  - sudo apt-get install ros-$ROS_DISTRO-ros-base 
+  - sudo apt-get install python-rosinstall 
+  - sudo apt-get install python-rosinstall-generator
+  - sudo apt-get install python-wstool
+  - sudo apt-get install build-essential
+  - sudo apt-get install ros-$ROS_DISTRO-catkin
+  - sudo apt-get install cmake
+  - sudo apt-get install python-catkin-pkg
+  - sudo apt-get install python-empty
+  - sudo apt-get install python-nose
+  - sudo apt-get install python-setuptools
+  - sudo apt-get install libgtest-dev
+
   - source /opt/ros/$ROS_DISTRO/setup.bash
 
   - sudo rosdep init
