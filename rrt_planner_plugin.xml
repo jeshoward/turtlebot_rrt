@@ -1,0 +1,5 @@
+<library path="lib/turtlebot_rrt/turtlebot_rrt_lib">
+	<class name="RRT_Planner/RRTPlanner" type="RRT_Planner::RRTPlanner" base_class_type="nav_core::BaseGlobalPlanner">
+		<description>This is an RRT global planner plugin.</description>
+	</class>
+</library>

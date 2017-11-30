@@ -3,11 +3,8 @@
  * @author Jessica Howard
  * @file turtlebot_rrt/src/turtlebot_rrt.cc
  *
- * @brief Algorithm to make the turtlebot move around a gazebo workspace
- * @detail The turtlebot will move forward in a straight line until
- * encountering an obstacle. The turtlebot will then rotate until a clear
- * path is available and again drive forward. Rinse and repeat until you
- * get bored of watching.
+ * @brief TODO
+ * @detail TODO
  *
  * 
  * 
@@ -37,3 +34,63 @@
  */
 
 #include "turtlebot_rrt/turtlebot_rrt.h"
+#include <pluginlib/class_list_macros.h>
+
+namespace RRT_Planner {
+    
+    void RRTPlanner::initialize(std::string name, 
+            costmap_2d::Costmap2DROS* costmap_ros) {
+        if(!initialized_) {
+            costmap_ros_ = costmap_ros;
+            costmap_ = costmap_ros->getCostmap();
+            
+            ros::NodeHandle node_handle("~/" + name);
+            //do node handle stuff here
+            
+            x_origin_ = costmap_->getOriginX();
+            y_origin_ = costmap_->getOriginY();
+            
+            map_width_ = costmap_->getSizeInCellsX();
+            map_height_ = costmap_->getSizeInCellsY();
+            resolution_ = costmap_->getResolution();
+            
+            world_model_ = new base_local_planner::CostmapModel(*costmap_);
+            
+            ROS_INFO("RRT planner initialized successfully.");
+            initialized_ = true;
+        } else {
+            ROS_WARN("RRT planner has already been initialized.");
+        }
+    }
+    
+    bool RRTPlanner::makePlan(const geometry_msgs::PoseStamped& start, 
+            const geometry_msgs::PoseStamped& goal, 
+            std::vector<geometry_msgs::PoseStamped>& plan) {
+        // Check if we've initialized, if not error
+        if(!initialized_) {
+            ROS_ERROR("RRT planner has not been initialized, please call "
+                    "initialize() to use the planner");
+            return false;
+        }
+        // Print some debugging info
+        ROS_DEBUG("Start: %.2f, %.2f", start.pose.position.x,
+                start.pose.position.y);
+        ROS_DEBUG("Goal: %.2f, %.2f", goal.pose.position.x,
+                goal.pose.position.y);
+        
+        plan.clear();
+        
+        // Make sure that the goal header frame is correct
+        if (goal.header.frame_id != costmap_ros_->getGlobalFrameID()) {
+            ROS_ERROR("This planner will only accept goals in the %s frame,"
+                    "the goal was sent to the %s frame.", 
+                    costmap_ros_->getGlobalFrameID().c_str(),
+                    goal.header.frame_id.c_str());
+            return false;
+        }
+        return false;
+    }
+}
+
+// Register as a BaseGlobalPlanner plugin
+PLUGINLIB_EXPORT_CLASS(RRT_Planner::RRTPlanner, nav_core::BaseGlobalPlanner)
