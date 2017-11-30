@@ -88,3 +88,9 @@ install(TARGETS ${PROJECT_NAME}
 install(FILES ${PROJECT_NAME} rrt_planner_plugin.xml
 	DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
+
+# Testing
+if (CATKIN_ENABLE_TESTING)
+	catkin_add_gtest(rrt_test test/turtlebot_rrt_test.cc)
+	target_link_libraries(rrt_test ${catkin_LIBRARIES})
+endif()

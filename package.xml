@@ -83,6 +83,8 @@
   <exec_depend>eigen</exec_depend>
   <exec_depend>sensor_msgs</exec_depend>
 
+  <test_depend>rosunit</test_depend>
+
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
