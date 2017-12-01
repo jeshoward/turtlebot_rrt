@@ -54,6 +54,9 @@ These steps assume that you have already cloned the repository, if not see [Inst
 
 TODO: specific commands for this
 
+#### Creating Custom Maps
+A single demo map has been provided here, if you want to create your own Gazebo worlds and this RRT algorithm to navigate them follow [this](docs/MAP_CONVERSION.md) tutorial.
+
 ### Test Steps
 These steps assume that you have already cloned the repository, if not see [Installation](#installation).
 
@@ -103,3 +106,4 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
