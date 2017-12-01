@@ -26,8 +26,6 @@ cd ~/catkin_ws && catkin_make
 
 Full instructions can be found [here](http://turtlebot3.robotis.com/en/latest/pc_software.html#install-dependent-packages).
 
-3. 
-
 ## Running Turtlebot3 SLAM
 Once I created my .world file in Gazebo, I modified the turtlebot3_world.launch file to point to the map I had created instead of the default map.
 
@@ -41,7 +39,7 @@ Once I created my .world file in Gazebo, I modified the turtlebot3_world.launch 
   <node pkg="tf" type="static_transform_publisher" name="camera_tf" args="-1.95 -0.55 2.0 -1.58 0 -1.58 /odom /camera_link 100"/>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <b><arg name="world_name" value="$(find turtlebot_rrt)/maps/simple_maze.world"/></b>
+    <arg name="world_name" value="[PATH TO YOUR WORLD FILE HERE]"/>
     <arg name="paused" value="false"/>
     <arg name="use_sim_time" value="true"/>
     <arg name="gui" value="true"/>
@@ -54,3 +52,31 @@ Once I created my .world file in Gazebo, I modified the turtlebot3_world.launch 
   <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model turtlebot3_burger -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description" />
 </launch>
 ```
+Once you have modified the launch file so that your world is in place, launch the Turtlebot3.
+
+```
+export TURTLEBOT3_MODEL=burger
+roslaunch turtlebot3_gazebo turtlebot3_world.launch
+```
+To launch the SLAM algorithm:
+```
+export TURTLEBOT3_MODEL=burger
+roslaunch turtlebot3_slam turtlebot3_slam.launch
+```
+To show the RViz visualization:
+```
+rosrun rviz rviz -d `rospack find turtlebot3_slam`/rviz/turtlebot3_slam.rviz
+```
+To launch the keyboard teleoperation:
+```
+roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
+```
+Now you just drive it around until you're happy with how the map looks in RViz.
+![alt tag](images/simple_maze_2d.png "RViz Simple Maze")
+## Saving Your Map
+Open a new terminal window:
+```
+rosrun map_server map_saver -f ~/map
+```
+Replace ```~/map``` with the filename you would like to save your map as. For example, ```~/simple_maze``` will give you a ```simple_maze.pgm``` and ```simple_maze.yaml```.
+
