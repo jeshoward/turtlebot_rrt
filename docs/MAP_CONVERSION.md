@@ -41,7 +41,7 @@ Once I created my .world file in Gazebo, I modified the turtlebot3_world.launch 
   <node pkg="tf" type="static_transform_publisher" name="camera_tf" args="-1.95 -0.55 2.0 -1.58 0 -1.58 /odom /camera_link 100"/>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(find turtlebot_rrt)/maps/simple_maze.world"/>
+    <b><arg name="world_name" value="$(find turtlebot_rrt)/maps/simple_maze.world"/></b>
     <arg name="paused" value="false"/>
     <arg name="use_sim_time" value="true"/>
     <arg name="gui" value="true"/>
