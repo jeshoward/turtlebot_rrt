@@ -1,5 +1,8 @@
 [![Build Status](https://travis-ci.org/jeshoward/turtlebot_rrt.svg?branch=master)](https://travis-ci.org/jeshoward/turtlebot_rrt) [![Coverage Status](https://coveralls.io/repos/github/jeshoward/turtlebot_rrt/badge.svg?branch=master)](https://coveralls.io/github/jeshoward/turtlebot_rrt?branch=master)
 
+
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+
 # Randomly Exploring Random Tree Path Planner ROS Plugin
 This plugin implements a simulated Randomly Exploring Random Tree (RRT) path planner for the Kinetic Kame release of the Robot Operating System (ROS) framework. It uses the nav_core::BaseGlobalPlanner interface and can be used on any platforms that implement the move_base package, but has been specifically tested using the simulated Turtlebot platform.
 
@@ -28,6 +31,7 @@ catkin_make
 1. ROS Kinetic Kame [(Installation Instructions)](docs/README_DEPENDENCIES.md#ros)
 2. Catkin [(Installation Instructions)](docs/README_DEPENDENCIES.md#catkin)
 3. Rviz [(Installation Instructions)](/docs/README_DEPENDENCIES.md#rviz)
+4. Gazebo [(Installation Instructions)](/docs/README_DEPENDENCIES.dm#gazebo)
 
 ## Usage
 TODO
@@ -36,7 +40,12 @@ TODO
 TODO
 
 ### Test Steps
-TODO
+These steps assume that you have already cloned the repository, if not see [Installation](#installation).
+
+```
+cd [workspace]/src
+catkin_make run_tests && catkin_test_results
+```
 
 ## Issues
 TODO

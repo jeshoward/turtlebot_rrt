@@ -55,8 +55,12 @@ sudo apt-get install ros-lunar-catkin
 ```
 
 ## RViz
-Full instructions for installing Rviz can be found [here](http://wiki.ros.org/rviz/UserGuide#Install_or_build_rviz)
+Full instructions for installing Rviz can be found [here](http://wiki.ros.org/rviz/UserGuide#Install_or_build_rviz).
 
 ```
 sudo apt-get install ros-kinetic-rviz
 ```
+
+## Gazebo
+Full instructions for installing Gazebo can be found [here](http://gazebosim.org/tutorials?cat=install).
+
