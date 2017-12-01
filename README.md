@@ -1,8 +1,8 @@
-Travis Build Status [![Build Status](https://travis-ci.org/jeshoward/turtlebot_rrt.svg?branch=master)](https://travis-ci.org/jeshoward/turtlebot_rrt) 
+[![Build Status](https://travis-ci.org/jeshoward/turtlebot_rrt.svg?branch=master)](https://travis-ci.org/jeshoward/turtlebot_rrt) Travis Build Status 
 
-Coveralls Code Coverage Status [![Coverage Status](https://coveralls.io/repos/github/jeshoward/turtlebot_rrt/badge.svg?branch=master)](https://coveralls.io/github/jeshoward/turtlebot_rrt?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/jeshoward/turtlebot_rrt/badge.svg?branch=master)](https://coveralls.io/github/jeshoward/turtlebot_rrt?branch=master) Coveralls Code Coverage Status 
 
-Software License [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause) Software License 
 
 
 # Randomly Exploring Random Tree Path Planner ROS Plugin
