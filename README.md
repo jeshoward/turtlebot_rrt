@@ -34,10 +34,23 @@ catkin_make
 4. Gazebo [(Installation Instructions)](/docs/README_DEPENDENCIES.dm#gazebo)
 
 ## Usage
-TODO
+TODO: 
+
+### Parameters
+TODO: Add parameters and explanations
+
+### Publishers
+TODO: List publishers
+
+### Subscribers
+TODO: List subscribers
 
 ### Demo Steps
-TODO
+These steps assume that you have already cloned the repository, if not see [Installation](#installation).
+
+1. Run the demo launch file 
+
+TODO: specific commands for this
 
 ### Test Steps
 These steps assume that you have already cloned the repository, if not see [Installation](#installation).
@@ -46,15 +59,19 @@ These steps assume that you have already cloned the repository, if not see [Inst
 cd [workspace]/src
 catkin_make run_tests && catkin_test_results
 ```
+TODO: Add screenshot of successful tests and link to coveralls test coverage
 
 ## Issues
-TODO
+Issue tracking sheet can be found with the [Sprint Backlog](https://docs.google.com/spreadsheets/d/11MImRGM0dvr5bSlyq22xXTaM7s8ReXDSpWUyN7IlM3k/edit?usp=sharing) in the Issues tab.
+
+Summary:
+1. TR-1 Coveralls not recognizing build and running coverage tests
 
 ## API
 TODO
 
 ## SIP
-- [Sprint Backlog](https://docs.google.com/spreadsheets/d/11MImRGM0dvr5bSlyq22xXTaM7s8ReXDSpWUyN7IlM3k/edit?usp=sharing)
+- [Sprint Backlog and Issue Tracking](https://docs.google.com/spreadsheets/d/11MImRGM0dvr5bSlyq22xXTaM7s8ReXDSpWUyN7IlM3k/edit?usp=sharing)
 - [Sprint Planning Notes](https://docs.google.com/document/d/175Ea56UEoEn6o_A4oEjhvzU04l2S9aK262BWnC1AG4U/edit?usp=sharing)
 
 ## License
