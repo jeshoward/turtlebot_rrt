@@ -75,30 +75,25 @@
 #include <base_local_planner/world_model.h>
 #include <base_local_planner/costmap_model.h>
 
+/** Local includes **/
+#include "turtlebot_rrt/vertex.h"
+
 #ifndef SRC_TURTLEBOT_RRT_H_
 #define SRC_TURTLEBOT_RRT_H_
 
 namespace RRT_Planner {
 
-    /**
-     * @struct Vertex
-     * @brief A struct that holds a vertex's location and parent
-     */
-    struct Vertex {
-        float x;
-        float y;
-        int parent_index;
-    };
-
     class RRTPlanner : public nav_core::BaseGlobalPlanner {
     public:
+
         /**
          * @brief Constructor for RRTPlanner
          * @param costmap_ros cost_map ros wrapper
          */
         RRTPlanner() : costmap_ros_(nullptr), initialized_(false) {
-            
+
         }
+
         /**
          * @brief Constructor for RRTPlanner
          * @param costmap_ros cost_map ros wrapper
@@ -116,9 +111,9 @@ namespace RRT_Planner {
          * @param name ROS NodeHandle name
          * @param costmap_ros cost_map ros wrapper
          */
-        void initialize(std::string name, 
-            costmap_2d::Costmap2DROS* costmap_ros);
-        
+        void initialize(std::string name,
+                costmap_2d::Costmap2DROS* costmap_ros);
+
         /**
          * @brief follows the virtual method of the base class
          * @param start start pose
@@ -129,7 +124,7 @@ namespace RRT_Planner {
         bool makePlan(const geometry_msgs::PoseStamped& start,
                 const geometry_msgs::PoseStamped& goal,
                 std::vector<geometry_msgs::PoseStamped>& plan);
-        
+
         /**
          * @brief follows the virtual method of the base class
          * @param start start pose
@@ -140,29 +135,118 @@ namespace RRT_Planner {
         bool generatePlan(const geometry_msgs::PoseStamped& start,
                 const geometry_msgs::PoseStamped& goal,
                 std::vector<geometry_msgs::PoseStamped>& plan);
-        
+
     private:
+        /**
+         * @brief ROS node handle
+         */
         ros::NodeHandle node_handle_;
+        /**
+         * @brief The ROS wrapper for the costmap the controller will use
+         */
         costmap_2d::Costmap2DROS* costmap_ros_;
+        /**
+         * @brief The ROS wrapper for the costmap the controller will use
+         */
         costmap_2d::Costmap2D* costmap_;
+        /**
+         * @brief World model associated to the costmap
+         */
         base_local_planner::WorldModel* world_model_;
+        /**
+         * @brief Check if the global planner is initialized
+         */
         bool initialized_;
+        /**
+         * @brief How close to the goal is close enough
+         */
         float goal_radius_;
+        /**
+         * @brief Size of the step the RRT planner takes
+         */
         float step_size_;
+        /**
+         * @brief Size of the sub-step used for collision checking
+         */
         float delta_;
+        /**
+         * @brief x coordinate of robot origin
+         */
         float x_origin_;
+        /**
+         * @brief y coordinate of robot origin
+         */
         float y_origin_;
+        /**
+         * @brief x coordinate of goal
+         */
+        float x_goal_;
+        /**
+         * @brief y coordinate of goal
+         */
+        float y_goal_;
+        /**
+         * @brief 
+         */
         float resolution_;
+        /**
+         * @brief Width of the 2D map
+         */
         int map_width_;
+        /**
+         * @brief Height of the 2D map
+         */
         int map_height_;
-        std::vector<Vertex> vertex_list_;
+        /**
+         * @brief List of vertices
+         */
+        std::vector<RRT_Path::Vertex> vertex_list_;
+        /**
+         * @brief Gets a random point in the map space
+         * @return returns an x,y pair
+         */
         std::pair<float, float> get_random_point();
+        /**
+         * @brief Gets the closest vertex to the given point
+         * @param A point in the map space
+         * @return the index of the closest vertex to the given point
+         */
         int get_closest_vertex(std::pair<float, float> random_point);
-        bool move_towards_point(int closest_vertex, std::pair<float, float> random_point);
-        float get_distance(std::pair<float, float> start_point, std::pair<float, float> end_point);
-        bool reached_goal(std::pair<float, float> new_vertex);
+        /**
+         * @brief 
+         */
+        bool move_towards_point(int closest_vertex,
+                std::pair<float, float> random_point);
+        /**
+         * @brief Euclidean distance between two points
+         * @param start_point starting point
+         * @param end_point ending point
+         * @return euclidean distance between the points
+         */
+        float get_distance(std::pair<float, float> start_point,
+                std::pair<float, float> end_point);
+        /**
+         * @brief Is vertex within goal_radius_ of the goal
+         * @param the vertex to be checked
+         * @return true if within goal_radius_
+         */
+        bool reached_goal(int new_vertex);
+
+        /**
+         * @brief returns the best path
+         * @param start starting point of robot
+         * @param goal goal point
+         * @return returns a list of coordinates to reach the goal
+         */
+        std::vector<RRT_Path::Vertex> find_path(std::pair<float, float> start, std::pair<float, float> goal);
+        
+        /**
+         * @brief Checks if the path is safe between start_point and end_point
+         * @param start_point starting point location
+         * @param end_point ending point location
+         * @return true if path between points does not intersect obstacles
+         */
+        bool is_safe(std::pair<float, float> start_point, std::pair<float, float> end_point);
     };
 }
-
-
 #endif // SRC_TURTLEBOT_RRT_H_
