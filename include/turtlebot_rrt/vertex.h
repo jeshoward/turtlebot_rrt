@@ -36,7 +36,7 @@
 #include <cmath>
 #include <utility>
 
-namespace RRT_Path {
+namespace turtlebot_rrt {
 
     class Vertex {
     private:

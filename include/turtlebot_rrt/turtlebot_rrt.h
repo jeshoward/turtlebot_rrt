@@ -81,7 +81,7 @@
 #ifndef SRC_TURTLEBOT_RRT_H_
 #define SRC_TURTLEBOT_RRT_H_
 
-namespace RRT_Planner {
+namespace turtlebot_rrt {
 
     class RRTPlanner : public nav_core::BaseGlobalPlanner {
     public:
@@ -122,17 +122,6 @@ namespace RRT_Planner {
          * @return bool, true
          */
         bool makePlan(const geometry_msgs::PoseStamped& start,
-                const geometry_msgs::PoseStamped& goal,
-                std::vector<geometry_msgs::PoseStamped>& plan);
-
-        /**
-         * @brief follows the virtual method of the base class
-         * @param start start pose
-         * @param goal goal pose
-         * @param plan generated path
-         * @return bool, true
-         */
-        bool generatePlan(const geometry_msgs::PoseStamped& start,
                 const geometry_msgs::PoseStamped& goal,
                 std::vector<geometry_msgs::PoseStamped>& plan);
 
@@ -200,7 +189,7 @@ namespace RRT_Planner {
         /**
          * @brief List of vertices
          */
-        std::vector<RRT_Path::Vertex> vertex_list_;
+        std::vector<turtlebot_rrt::Vertex> vertex_list_;
         /**
          * @brief Gets a random point in the map space
          * @return returns an x,y pair
@@ -238,7 +227,7 @@ namespace RRT_Planner {
          * @param goal goal point
          * @return returns a list of coordinates to reach the goal
          */
-        std::vector<RRT_Path::Vertex> find_path(std::pair<float, float> start, std::pair<float, float> goal);
+        std::vector<turtlebot_rrt::Vertex> find_path(std::pair<float, float> start, std::pair<float, float> goal);
         
         /**
          * @brief Checks if the path is safe between start_point and end_point

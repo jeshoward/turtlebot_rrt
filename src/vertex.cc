@@ -32,7 +32,7 @@
 
 #include "vertex.h"
 
-namespace RRT_Path {
+namespace turtlebot_rrt {
 
     Vertex::Vertex(float x, float y, int index, int parent_index) {
         x_ = x;
