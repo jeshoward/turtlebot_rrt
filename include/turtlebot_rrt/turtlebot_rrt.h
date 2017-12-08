@@ -36,6 +36,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef SRC_TURTLEBOT_RRT_H_
+#define SRC_TURTLEBOT_RRT_H_
 
 /** include standard libraries **/
 #include <iostream>
@@ -78,9 +80,6 @@
 /** Local includes **/
 #include "turtlebot_rrt/vertex.h"
 
-#ifndef SRC_TURTLEBOT_RRT_H_
-#define SRC_TURTLEBOT_RRT_H_
-
 namespace turtlebot_rrt {
 
     class RRTPlanner : public nav_core::BaseGlobalPlanner {
@@ -88,21 +87,15 @@ namespace turtlebot_rrt {
 
         /**
          * @brief Constructor for RRTPlanner
-         * @param costmap_ros cost_map ros wrapper
          */
-        RRTPlanner() : costmap_ros_(nullptr), initialized_(false) {
-
-        }
+        RRTPlanner();
 
         /**
          * @brief Constructor for RRTPlanner
          * @param costmap_ros cost_map ros wrapper
          * @param name name to associate to the node
          */
-        RRTPlanner(std::string name, costmap_2d::Costmap2DROS* costmap_ros) :
-        costmap_ros_(costmap_ros) {
-            initialize(name, costmap_ros);
-        }
+        RRTPlanner(std::string name, costmap_2d::Costmap2DROS* costmap_ros);
 
 
         /** overridden classes from interface nav_core::BaseGlobalPlanner **/
@@ -236,6 +229,15 @@ namespace turtlebot_rrt {
          * @return true if path between points does not intersect obstacles
          */
         bool is_safe(std::pair<float, float> start_point, std::pair<float, float> end_point);
+      
+      /**
+       * @brief  Checks the legality of the robot footprint at a position and orientation using the world model
+       * @param x_i The x position of the robot 
+       * @param y_i The y position of the robot 
+       * @param theta_i The orientation of the robot
+       * @return 
+       */      
+      double footprintCost(double x_i, double y_i, double theta_i);
     };
 }
 #endif // SRC_TURTLEBOT_RRT_H_
