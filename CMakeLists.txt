@@ -4,50 +4,57 @@ add_definitions(-std=c++11 -Wall -Werror)
 
 find_package(catkin REQUIRED 
   COMPONENTS
-    nav_core
     roscpp
-    rospy
-    std_msgs
-    angles
-    costmap_2d
-    geometry_msgs
-    nav_msgs
-    pluginlib
     tf
-    move_base
+    nav_core
+    costmap_2d
     base_local_planner
+    pluginlib
 )
+
+include_directories(
+  include
+  ${catkin_INCLUDE_DIRS}
+)
+
+add_definitions(${EIGEN3_DEFINITIONS})
 
 catkin_package(
-	CATKIN_DEPENDS
-    nav_core
+  INCLUDE_DIRS include
+  LIBRARIES ${PROJECT_NAME}
+  CATKIN_DEPENDS
     roscpp
-    rospy
-    std_msgs
-    angles
-    costmap_2d
-    geometry_msgs
-    nav_msgs
     pluginlib
-    tf
-    move_base
+    costmap_2d
     base_local_planner
+    nav_core
 )
 
-# Build
-include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/
-  ${CMAKE_CURRENT_SOURCE_DIR}
-	${catkin_INCLUDE_DIRS}
+add_library(${PROJECT_NAME} 
+  src/turtlebot_rrt.cc
+  src/vertex.cc
 )
 
+add_dependencies(turtlebot_rrt ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(turtlebot_rrt
+  ${PROJECT_NAME}
+  ${catkin_LIBRARIES}
+)
 
-add_library(turtlebot_rrt_lib src/turtlebot_rrt.cc)
+install(TARGETS ${PROJECT_NAME} turtlebot_rrt
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  PATTERN ".svn" EXCLUDE
+)
 
 install(FILES rrt_planner_plugin.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
+)  
 
 # Testing
 if (CATKIN_ENABLE_TESTING)

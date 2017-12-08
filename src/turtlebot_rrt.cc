@@ -37,34 +37,35 @@
 #include "turtlebot_rrt/vertex.h"
 #include <pluginlib/class_list_macros.h>
 
+// Register as a BaseGlobalPlanner plugin
+PLUGINLIB_EXPORT_CLASS(turtlebot_rrt::RRTPlanner, nav_core::BaseGlobalPlanner)
+
 namespace turtlebot_rrt {
-  void RRTPlanner::initialize(std::string name, costmap_2d::Costmap2DROS* costmap_ros) {
+  
+  RRTPlanner::RRTPlanner() 
+    : costmap_ros_(nullptr), initialized_(false) { }
+  
+  RRTPlanner::RRTPlanner(std::string name, costmap_2d::Costmap2DROS* costmap_ros) 
+    : costmap_ros_(costmap_ros) {
+    initialize(name, costmap_ros);
+  }
+  
+  void RRTPlanner::initialize(std::string name, 
+                              costmap_2d::Costmap2DROS* costmap_ros) {
     if (!initialized_) {
       // Initialize map
       costmap_ros_ = costmap_ros;
       costmap_ = costmap_ros->getCostmap();
-      
-      x_origin_ = costmap_->getOriginX();
-      y_origin_ = costmap_->getOriginY();
-      
-      map_width_ = costmap_->getSizeInCellsX();
-      map_height_ = costmap_->getSizeInCellsY();
-      resolution_ = costmap_->getResolution();
-      
+
+      // Initialize node handle
+      ros::NodeHandle node_handle("~/" + name);      
       world_model_ = new base_local_planner::CostmapModel(*costmap_);
       
-      // Initialize node handle
-      ros::NodeHandle node_handle("~/" + name);
-      
-      // TODO do node handle stuff here
+
       
       // Initialize root node
       turtlebot_rrt::Vertex root(x_origin_, y_origin_, 0, 0);
       vertex_list_.push_back(root);
-      
-      // TODO Initialize parameters
-		node_handle.getParam("delta_", this->delta_);
-		ROS_INFO("delta_=%.2f", delta_);
       
       // Display info message
       ROS_INFO("RRT planner initialized successfully.");
@@ -74,13 +75,34 @@ namespace turtlebot_rrt {
     }
   }
   
-  bool RRTPlanner::makePlan(const geometry_msgs::PoseStamped& start, const geometry_msgs::PoseStamped& goal, std::vector<geometry_msgs::PoseStamped>& plan) {
+  double RRTPlanner::footprintCost(double x_i, double y_i, double theta_i) {
+    if(!initialized_) {
+      ROS_ERROR("The planner has not been initialized.");
+      return -1.0;
+    }
+    
+    std::vector<geometry_msgs::Point> footprint = costmap_ros_->getRobotFootprint();
+    
+    // if we have no footprint do nothing
+    if(footprint.size() < 3)
+      return -1.0;
+    
+    // check if footprint is legal
+    double footprint_cost = world_model_->footprintCost(x_i, y_i, theta_i, footprint);
+    return footprint_cost;
+  }
+  
+  bool RRTPlanner::makePlan(const geometry_msgs::PoseStamped& start, 
+                            const geometry_msgs::PoseStamped& goal, 
+                            std::vector<geometry_msgs::PoseStamped>& plan) {
+
     // Check if we've initialized, if not error
     if (!initialized_) {
       ROS_ERROR("RRT planner has not been initialized, please call "
                 "initialize() to use the planner");
       return false;
     }
+    
     // Print some debugging info
     ROS_DEBUG("Start: %.2f, %.2f", start.pose.position.x,
               start.pose.position.y);
@@ -99,32 +121,78 @@ namespace turtlebot_rrt {
       return false;
     }
     
-    RRTPlanner::x_goal_ = goal.pose.position.x;
-    RRTPlanner::y_goal_ = goal.pose.position.y;
-    
     tf::Stamped<tf::Pose> goal_tf;
     tf::Stamped<tf::Pose> start_tf;
     
     poseStampedMsgToTF(goal, goal_tf);
     poseStampedMsgToTF(start, start_tf);
     
-    //float start_x = start.pose.position.x;
-    //float start_y = start.pose.position.y;
-    
-    //float goal_x = goal.pose.position.x;
-    //float goal_y = goal.pose.position.y;
-    
     // Get the starting and goal yaws (pitch and roll are useless here)
     double useless_pitch, useless_roll, goal_yaw, start_yaw;
     start_tf.getBasis().getEulerYPR(start_yaw, useless_pitch, useless_roll);
     goal_tf.getBasis().getEulerYPR(goal_yaw, useless_pitch, useless_roll);
     
-    // TODO kick off the RRT algorithm
+    // Get goal locations
+    double goal_x = goal.pose.position.x;
+    double goal_y = goal.pose.position.y;
     
-    return false;
+    // Get start location
+    double start_x = start.pose.position.x;
+    double start_y = start.pose.position.y;
+    
+    // Find the difference between the start and goal
+    double diff_x = goal_x - start_x;
+    double diff_y = goal_y - start_y;
+    double diff_yaw = angles::normalize_angle(goal_yaw-start_yaw);
+    
+    double target_x = goal_x;
+    double target_y = goal_y;
+    double target_yaw = goal_yaw;
+    
+    bool done = false;
+    double scale = 1.0;
+    double d_scale = 0.01;
+    
+    while(!done) {
+      // TODO Carrot planner stuff, put RRT stuff in
+      if(scale < 0) {
+        target_x = start_x;
+        target_y = start_y;
+        target_yaw = start_yaw;
+        ROS_WARN("Could not find a valid plan for this goal.");
+        break;
+      }
+      
+      target_x = start_x + scale * diff_x;
+      target_y = start_y + scale * diff_y;
+      target_yaw = angles::normalize_angle(start_yaw + scale * diff_yaw);
+      
+      double footprint_cost = footprintCost(target_x, target_y, diff_yaw);
+      if(footprint_cost >= 0)
+        done = true;
+      scale -= d_scale;
+    }
+    
+    plan.push_back(start);
+    geometry_msgs::PoseStamped new_goal = goal;
+    tf::Quaternion goal_quat = tf::createQuaternionFromYaw(target_yaw);
+    
+    new_goal.pose.position.x = target_x;
+    new_goal.pose.position.y = target_y;
+    
+    new_goal.pose.orientation.x = goal_quat.x();
+    new_goal.pose.orientation.y = goal_quat.y();
+    new_goal.pose.orientation.z = goal_quat.z();
+    new_goal.pose.orientation.w = goal_quat.w();
+    
+    plan.push_back(new_goal);
+    
+    return done;
   }
   
-  std::vector<turtlebot_rrt::Vertex> RRTPlanner::find_path(std::pair<float, float> start, std::pair<float, float> goal) {
+  std::vector<turtlebot_rrt::Vertex> RRTPlanner::find_path(
+    std::pair<float, float> start, 
+    std::pair<float, float> goal) {
     std::vector<turtlebot_rrt::Vertex> best_path;
     
     return best_path;
@@ -233,7 +301,4 @@ namespace turtlebot_rrt {
     else
       return false;
   }
-}
-
-// Register as a BaseGlobalPlanner plugin
-PLUGINLIB_EXPORT_CLASS(turtlebot_rrt::RRTPlanner, nav_core::BaseGlobalPlanner)
+};

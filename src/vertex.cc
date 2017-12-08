@@ -30,7 +30,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "vertex.h"
+#include "turtlebot_rrt/vertex.h"
 
 namespace turtlebot_rrt {
 
