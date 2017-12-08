@@ -41,16 +41,13 @@ TODO:
 ### Parameters
 TODO: Add parameters and explanations
 
-### Publishers
-TODO: List publishers
-
-### Subscribers
-TODO: List subscribers
-
 ### Demo Steps
 These steps assume that you have already cloned the repository, if not see [Installation](#installation).
 
 1. Run the demo launch file 
+```
+roslaunch turtlebot_rrt rrt_planner.launch
+```
 
 TODO: specific commands for this
 
