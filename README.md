@@ -48,8 +48,9 @@ These steps assume that you have already cloned the repository, if not see [Inst
 ```
 roslaunch turtlebot_rrt rrt_planner.launch
 ```
+![Simple Maze map displayed in Rviz and Gazebo]( turtlebot_rrt/docs/images/turtlebot_rrt_demo.png  "Simple Maze map displayed in Rviz and Gazebo")
 
-TODO: specific commands for this
+2. To set a goal for the robot switch to the Rviz window and and click "2D Nav Goal" at the top and select on the map where you want the robot to go.
 
 #### Creating Custom Maps
 A single demo map has been provided here, if you want to create your own Gazebo worlds and this RRT algorithm to navigate them follow [this](docs/MAP_CONVERSION.md) tutorial.
