@@ -47,16 +47,10 @@
   <node name="rviz" pkg="rviz" type="rviz" output="screen" respawn="true" args="-d $(find turtlebot_rrt)/maps/simple_maze.rviz"/>
 
   <!-- Launch AMCL -->
-  <node name="amcl" pkg="amcl" type="amcl" output="screen">
-    <param name="base_frame_id" value="base_footprint"/>
-  </node>
+  <include file="$(find turtlebot_rrt)/launch/includes/amcl.launch.xml"/>
   
   <!-- Move base -->
-  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
-    <remap from="/cmd_vel" to="/mobile_base/commands/velocity"/>
-    <rosparam file="$(find turtlebot_rrt)/config/costmap_common_params.yaml" command="load" ns="global_costmap"/>
-    <rosparam file="$(find turtlebot_rrt)/config/costmap_common_params.yaml" command="load" ns="local_costmap"/>
-    <rosparam file="$(find turtlebot_rrt)/config/local_costmap_params.yaml" command="load"/>
-    <rosparam file="$(find turtlebot_rrt)/config/global_costmap_params.yaml" command="load"/>
-  </node>
+  <include file="$(find turtlebot_rrt)/launch/includes/move_base.launch.xml">
+    <arg name="custom_param_file" value="$(find turtlebot_rrt)/config/rrt_global_planner_params.yaml"/>
+  </include>
 </launch>
