@@ -45,6 +45,7 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <boost/random.hpp>
 
 /** include ROS libraries **/
 #include <ros/ros.h>
@@ -218,9 +219,10 @@ namespace turtlebot_rrt {
          * @brief returns the best path
          * @param start starting point of robot
          * @param goal goal point
-         * @return returns a list of coordinates to reach the goal
+         * @return returns the index of the point that reaches the goal
          */
-        std::vector<turtlebot_rrt::Vertex> find_path(std::pair<float, float> start, std::pair<float, float> goal);
+        int find_path(const geometry_msgs::PoseStamped& start, 
+                            const geometry_msgs::PoseStamped& goal);
         
         /**
          * @brief Checks if the path is safe between start_point and end_point
@@ -238,6 +240,18 @@ namespace turtlebot_rrt {
        * @return 
        */      
       double footprintCost(double x_i, double y_i, double theta_i);
+      
+      /**
+      * @brief builds the plan from vertices and returns in PoseStamped
+      * @param goal_index the index of the vertex that has reached the goal
+      * @param start the starting location of the robot as passed to makePlan
+      * @param goal the goal location of the robot as passed to makePlan
+      * @return a vector of geometry_msgs:PoseStamped from the start to the goal
+      */
+      std::vector<geometry_msgs::PoseStamped>
+        build_plan(int goal_index,
+                   const geometry_msgs::PoseStamped& start, 
+                   const geometry_msgs::PoseStamped& goal);
     };
 }
 #endif // SRC_TURTLEBOT_RRT_H_
