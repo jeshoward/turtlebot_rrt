@@ -1,4 +1,7 @@
 <launch>
+  <!-- optional arguments for RRT -->
+
+  
   <!-- Launch the map server -->
   <arg name="map_name" default="simple_maze"/>
   <node name="map_server" pkg="map_server" type="map_server" args="$(find turtlebot_rrt)/maps/$(arg map_name).yaml" respawn="false">
@@ -50,7 +53,15 @@
   <include file="$(find turtlebot_rrt)/launch/includes/amcl.launch.xml"/>
   
   <!-- Move base -->
+  <arg name="step_size" default="3"/>
+  <arg name="delta" default="1"/>
+  <arg name="max_iterations" default="200000"/>
+  <arg name="goal_radius" default="0.5"/>      
   <include file="$(find turtlebot_rrt)/launch/includes/move_base.launch.xml">
     <arg name="custom_param_file" value="$(find turtlebot_rrt)/config/rrt_global_planner_params.yaml"/>
+    <arg name="step_size" value="$(arg step_size)"/>
+    <arg name="delta" value="$(arg delta)"/>
+    <arg name="max_iterations" value="$(arg max_iterations)"/>
+    <arg name="goal_radius" value="$(arg goal_radius)"/>    
   </include>
 </launch>
