@@ -44,7 +44,7 @@ namespace turtlebot_rrt {
     std::pair<float, float> Vertex::get_location() {
         return std::pair<float, float>(Vertex::x_, Vertex::y_);
     }
-    
+
     int Vertex::get_index() {
         return Vertex::index_;
     }
@@ -52,4 +52,4 @@ namespace turtlebot_rrt {
     int Vertex::get_parent() {
         return Vertex::parent_index_;
     }
-}
+}  // namespace turtlebot_rrt

@@ -33,9 +33,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <pluginlib/class_list_macros.h>
 #include "turtlebot_rrt/turtlebot_rrt.h"
 #include "turtlebot_rrt/vertex.h"
-#include <pluginlib/class_list_macros.h>
 
 // Register as a BaseGlobalPlanner plugin
 PLUGINLIB_EXPORT_CLASS(turtlebot_rrt::RRTPlanner, nav_core::BaseGlobalPlanner)
@@ -74,11 +74,6 @@ namespace turtlebot_rrt {
                max_iterations_);
       current_iterations_ = 0;
 
-
-      // publish stuff for viewing
-//      pub_tree_ = node_handle_.advertise<visualization_msgs::Marker>("rrt_tree", 0);
-//      ROS_INFO("RRT Tree visualization publishing to 'rrt_tree'.");
-
       // Get obstacles in the costmap
       map_width_cells_ = costmap_-> getSizeInCellsX();
       map_height_cells_ = costmap_-> getSizeInCellsY();
@@ -116,7 +111,6 @@ namespace turtlebot_rrt {
   bool RRTPlanner::makePlan(const geometry_msgs::PoseStamped& start,
                             const geometry_msgs::PoseStamped& goal,
                             std::vector<geometry_msgs::PoseStamped>& plan) {
-
     // Check if we've initialized, if not error
     if (!initialized_) {
       ROS_ERROR("RRT planner has not been initialized, please call "
@@ -196,13 +190,14 @@ namespace turtlebot_rrt {
 
       // get a random point on the map
       std::pair<float, float> random_point = RRTPlanner::GetRandomPoint();
-      ROS_DEBUG("Random point: %.2f, %.2f", random_point.first, random_point.second);
+      ROS_DEBUG("Random point: %.2f, %.2f", random_point.first,
+                random_point.second);
 
       // find the closest known vertex to that point
       int closest_vertex = RRTPlanner::GetClosestVertex(random_point);
 
       // try to move from the closest known vertex towards the random point
-      if(RRTPlanner::MoveTowardsPoint(closest_vertex, random_point)) {
+      if (RRTPlanner::MoveTowardsPoint(closest_vertex, random_point)) {
         ROS_DEBUG("Moved, closest vertex: %d", closest_vertex);
 
         current_iterations_++;
@@ -241,7 +236,8 @@ namespace turtlebot_rrt {
       // If the current distance is closer than what was previously
       // saved, update
       if (current_distance < closest_distance) {
-        ROS_DEBUG("Closest distance: %.5f, vertex: %d.", current_distance, v.get_index());
+        ROS_DEBUG("Closest distance: %.5f, vertex: %d.",
+                  current_distance, v.get_index());
         closest = v.get_index();
         closest_distance = current_distance;
       }
@@ -337,7 +333,7 @@ namespace turtlebot_rrt {
 
     unsigned int map_x, map_y;
 
-    while(GetDistance(std::pair<float, float>(current_x, current_y),
+    while (GetDistance(std::pair<float, float>(current_x, current_y),
                        end_point) > goal_radius_) {
       // increment towards end point
       current_x += delta_ * cos(theta);
@@ -347,7 +343,7 @@ namespace turtlebot_rrt {
       costmap_->worldToMap(current_x, current_y, map_x, map_y);
 
       // check for collision
-      if(!obstacle_map_.at(map_y * map_width_cells_ + map_x))
+      if (!obstacle_map_.at(map_y * map_width_cells_ + map_x))
         return false;
     }
     return true;
@@ -392,24 +388,25 @@ namespace turtlebot_rrt {
 
       // The plan we'll be adding to and returning
       std::vector<geometry_msgs::PoseStamped> plan;
+
+      // no plan found
       if (goal_index == -1)
-        //no plan found
         return plan;
 
       // The list of vertex indices we pass through to get to the goal
       std::deque<int> index_path;
       int current_index = goal_index;
-      while(current_index > 0) {
+      while (current_index > 0) {
         index_path.push_front(current_index);
         current_index = vertex_list_.at(current_index).get_parent();
       }
       index_path.push_front(0);
 
       // build the plan back up in PoseStamped messages
-      for(int i : index_path) {
-        if(i == 0)
+      for (int i : index_path) {
+        if (i == 0) {
           plan.push_back(start);
-        else {
+        } else {
           geometry_msgs::PoseStamped pos;
 
           pos.pose.position.x = vertex_list_.at(i).get_location().first;
@@ -425,4 +422,4 @@ namespace turtlebot_rrt {
         ROS_INFO("x: %.5f, y: %.5f", p.pose.position.x, p.pose.position.y);
       return plan;
   }
-};
+};  // namespace turtlebot_rrt

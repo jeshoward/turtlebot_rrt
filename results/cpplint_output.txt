@@ -1,22 +1,5 @@
-./test/turtlebotrrt_test.cc:34:  Found C system header after other header. Should be: turtlebotrrt_test.h, c system, c++ system, other.  [build/include_order] [4]
 Done processing ./test/turtlebotrrt_test.cc
-./src/vertex.cc:47:  Line ends in whitespace.  Consider deleting these extra spaces.  [whitespace/end_of_line] [4]
-./src/vertex.cc:55:  Namespace should be terminated with "// namespace turtlebot_rrt"  [readability/namespace] [5]
 Done processing ./src/vertex.cc
-./src/turtlebot_rrt.cc:38:  Found C system header after other header. Should be: turtlebot_rrt.h, c system, c++ system, other.  [build/include_order] [4]
-./src/turtlebot_rrt.cc:79:  Lines should be <= 80 characters long  [whitespace/line_length] [2]
-./src/turtlebot_rrt.cc:119:  Redundant blank line at the start of a code block should be deleted.  [whitespace/blank_line] [2]
-./src/turtlebot_rrt.cc:199:  Lines should be <= 80 characters long  [whitespace/line_length] [2]
-./src/turtlebot_rrt.cc:205:  Missing space before ( in if(  [whitespace/parens] [5]
-./src/turtlebot_rrt.cc:244:  Lines should be <= 80 characters long  [whitespace/line_length] [2]
-./src/turtlebot_rrt.cc:340:  Missing space before ( in while(  [whitespace/parens] [5]
-./src/turtlebot_rrt.cc:350:  Missing space before ( in if(  [whitespace/parens] [5]
-./src/turtlebot_rrt.cc:396:  Should have a space between // and comment  [whitespace/comments] [4]
-./src/turtlebot_rrt.cc:402:  Missing space before ( in while(  [whitespace/parens] [5]
-./src/turtlebot_rrt.cc:409:  Missing space before ( in for(  [whitespace/parens] [5]
-./src/turtlebot_rrt.cc:410:  Missing space before ( in if(  [whitespace/parens] [5]
-./src/turtlebot_rrt.cc:412:  If an else has a brace on one side, it should have it on both  [readability/braces] [5]
-./src/turtlebot_rrt.cc:428:  Namespace should be terminated with "// namespace turtlebot_rrt"  [readability/namespace] [5]
 Done processing ./src/turtlebot_rrt.cc
 ./include/turtlebot_rrt/vertex.h:33:  #ifndef header guard has wrong style, please use: INCLUDE_TURTLEBOT_RRT_VERTEX_H_  [build/header_guard] [5]
 ./include/turtlebot_rrt/vertex.h:106:  #endif line should be "#endif  // INCLUDE_TURTLEBOT_RRT_VERTEX_H_"  [build/header_guard] [5]
@@ -66,4 +49,4 @@ Done processing ./include/turtlebot_rrt/vertex.h
 ./include/turtlebot_rrt/turtlebot_rrt.h:290:  Add #include <utility> for pair<>  [build/include_what_you_use] [4]
 ./include/turtlebot_rrt/turtlebot_rrt.h:305:  Could not find a newline character at the end of the file.  [whitespace/ending_newline] [5]
 Done processing ./include/turtlebot_rrt/turtlebot_rrt.h
-Total errors found: 63
+Total errors found: 46
