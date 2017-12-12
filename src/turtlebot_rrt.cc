@@ -65,7 +65,6 @@ namespace turtlebot_rrt {
       
       map_width_ = costmap_->getSizeInMetersX();
       map_height_ = costmap_->getSizeInMetersY();
-      resolution_ = costmap_->getResolution();
       node_handle_.getParam("/move_base/step_size_", step_size_);
       node_handle_.getParam("/move_base/delta_", delta_);
       node_handle_.getParam("/move_base/goal_radius_", goal_radius_);
@@ -157,11 +156,11 @@ namespace turtlebot_rrt {
       return false;
     }
     // Have the RRTPlanner calculate the path
-    ROS_DEBUG("Going into find_path");
-    int goal_index = RRTPlanner::find_path(start, goal);
+    ROS_DEBUG("Going into FindPath");
+    int goal_index = RRTPlanner::FindPath(start, goal);
     
-    ROS_DEBUG("Going into build_plan");
-    plan = RRTPlanner::build_plan(goal_index, start, goal);
+    ROS_DEBUG("Going into BuildPlan");
+    plan = RRTPlanner::BuildPlan(goal_index, start, goal);
     
     if (plan.size() > 1) {
       ROS_INFO("A path was found.");
@@ -172,7 +171,7 @@ namespace turtlebot_rrt {
     }
   }
   
-  std::pair<float, float> RRTPlanner::get_random_point() {
+  std::pair<float, float> RRTPlanner::GetRandomPoint() {
     // generate random x and y coords within map bounds
     std::pair<float, float> random_point;
     std::random_device rd;
@@ -186,7 +185,7 @@ namespace turtlebot_rrt {
     return random_point;
   }
   
-  int RRTPlanner::find_path(
+  int RRTPlanner::FindPath(
     const geometry_msgs::PoseStamped& start, 
     const geometry_msgs::PoseStamped& goal) {
     bool done = false;
@@ -196,21 +195,21 @@ namespace turtlebot_rrt {
       ROS_DEBUG("Finding the path.");
       
       // get a random point on the map
-      std::pair<float, float> random_point = RRTPlanner::get_random_point();
+      std::pair<float, float> random_point = RRTPlanner::GetRandomPoint();
       ROS_DEBUG("Random point: %.2f, %.2f", random_point.first, random_point.second);
       
       // find the closest known vertex to that point
-      int closest_vertex = RRTPlanner::get_closest_vertex(random_point);
+      int closest_vertex = RRTPlanner::GetClosestVertex(random_point);
       
       // try to move from the closest known vertex towards the random point
-      if(RRTPlanner::move_towards_point(closest_vertex, random_point)) {
+      if(RRTPlanner::MoveTowardsPoint(closest_vertex, random_point)) {
         ROS_DEBUG("Moved, closest vertex: %d", closest_vertex);
         
         current_iterations_++;
         
         // check if we've reached our goal
         int new_vertex = vertex_list_.back().get_index();
-        done = reached_goal(new_vertex);
+        done = ReachedGoal(new_vertex);
         
         if (done) {
           ROS_INFO("Hey, we reached our goal, index: %d", new_vertex);
@@ -225,7 +224,7 @@ namespace turtlebot_rrt {
     return goal_index;
   }
   
-  int RRTPlanner::get_closest_vertex(std::pair<float, float> random_point) {
+  int RRTPlanner::GetClosestVertex(std::pair<float, float> random_point) {
     // Set our closest Vertex index to our root, since we know that it exists
     int closest = -1;
     
@@ -237,7 +236,7 @@ namespace turtlebot_rrt {
     
     // iterate through the vertex list to find the closest
     for (turtlebot_rrt::Vertex v : vertex_list_) {
-      current_distance = get_distance(v.get_location(), random_point);
+      current_distance = GetDistance(v.get_location(), random_point);
       
       // If the current distance is closer than what was previously
       // saved, update
@@ -250,7 +249,7 @@ namespace turtlebot_rrt {
     return closest;
   }
   
-  float RRTPlanner::get_distance(std::pair<float, float> start_point, 
+  float RRTPlanner::GetDistance(std::pair<float, float> start_point, 
                                  std::pair<float, float> end_point) {
     // coords for our first point
     float x1 = start_point.first;
@@ -268,9 +267,9 @@ namespace turtlebot_rrt {
     return distance;
   }
   
-  bool RRTPlanner::move_towards_point(int closest_vertex, 
+  bool RRTPlanner::MoveTowardsPoint(int closest_vertex, 
                                       std::pair<float, float> random_point) {
-    ROS_DEBUG("In move_towards_point");
+    ROS_DEBUG("In MoveTowardsPoint");
     float x_closest = vertex_list_.at(closest_vertex).get_location().first;
     float y_closest = vertex_list_.at(closest_vertex).get_location().second;
     float x_random = random_point.first;
@@ -286,7 +285,7 @@ namespace turtlebot_rrt {
     
     // Check if the path between closest_vertex and the new point
     // is safe
-    if (is_safe(proposed_point, closest_point)) {
+    if (IsSafe(proposed_point, closest_point)) {
       // If safe, add new Vertex to the back of vertex_list_
       turtlebot_rrt::Vertex new_vertex(new_x, new_y, vertex_list_.size(), 
                                        closest_vertex);
@@ -328,7 +327,7 @@ namespace turtlebot_rrt {
     return false;
   }
   
-  bool RRTPlanner::is_safe(std::pair<float, float> start_point,
+  bool RRTPlanner::IsSafe(std::pair<float, float> start_point,
                            std::pair<float, float> end_point) {
     // check the path at intervals of delta for collision
     float theta = atan2(end_point.second - start_point.second,
@@ -338,7 +337,7 @@ namespace turtlebot_rrt {
     
     unsigned int map_x, map_y;
     
-    while(get_distance(std::pair<float, float>(current_x, current_y),
+    while(GetDistance(std::pair<float, float>(current_x, current_y),
                        end_point) > goal_radius_) {
       // increment towards end point
       current_x += delta_ * cos(theta);
@@ -354,8 +353,8 @@ namespace turtlebot_rrt {
     return true;
   }
   
-  bool RRTPlanner::reached_goal(int new_vertex) {
-    ROS_DEBUG("In reached_goal, vertex index: %d.", new_vertex);
+  bool RRTPlanner::ReachedGoal(int new_vertex) {
+    ROS_DEBUG("In ReachedGoal, vertex index: %d.", new_vertex);
     
     std::pair<float, float> goal(x_goal_, y_goal_);
     
@@ -373,7 +372,7 @@ namespace turtlebot_rrt {
     
     // Check distance between current point and goal, if distance is less
     // than goal_radius_ return true, otherwise return false
-    float distance = get_distance(current_location, goal);
+    float distance = GetDistance(current_location, goal);
     ROS_DEBUG("Distance to goal: %.5f", distance);
     
     if (distance <= goal_radius_)
@@ -383,7 +382,7 @@ namespace turtlebot_rrt {
   }
   
   std::vector<geometry_msgs::PoseStamped> 
-    RRTPlanner::build_plan(int goal_index, 
+    RRTPlanner::BuildPlan(int goal_index, 
                            const geometry_msgs::PoseStamped& start, 
                            const geometry_msgs::PoseStamped& goal) {
       ROS_INFO("Building the plan.");
