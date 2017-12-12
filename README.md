@@ -36,10 +36,22 @@ catkin_make
 4. Gazebo [(Installation Instructions)](/docs/README_DEPENDENCIES.dm#gazebo)
 
 ## Usage
-TODO: 
+To run the plugin out of the box, follow the steps in the [demo](#demo-steps).
+The plugin uses a static map and is currently only packaged with a single map. To create custom maps follow the instructions [provided here](#creating-custom-maps). Once you have created your map place the ```.world```, ```.yaml```, and ```.pgm``` file into the ```/maps```  directory all using the same file name and then use the ```map_name``` arg with the launch file:
+```
+roslaunch turtlebot_rrt rrt_planner.launch map_name:="your_map_name"
+```
 
-### Parameters
-TODO: Add parameters and explanations
+### Launch file args
+```map_name``` indicates the map that you want to use. This assumes that you already have a ```.world```, ```.yaml```, and a ```.pgm``` file in the ```/maps``` directory.
+
+```step_size``` indicates the size of the step that the RRT algorithm uses. Sometimes called epsilon. A lower value is more accurate, a higher value is faster. Parameter is entered in meters. Has a default value of 2.5.
+
+```max_iterations``` determines the maximum number of vertices that will be created searching for a path between the starting point and the goal. This prevents infinite loops in the event the goal is unreachable. Parameter is an integer. Has a default value of 200,000.
+
+```delta``` is the incremental amount that will be checked along each step_size for obstacles. Choosing a lower value is more accurate, a higher value is faster. Parameter is entered in meters. Has a default value of 1.0.
+
+```goal_radius``` is how close you have to be to the goal for it to count. Parameter is entered in meters. Has a default value of 1.0.
 
 ### Demo Steps
 These steps assume that you have already cloned the repository, if not see [Installation](#installation).
@@ -48,7 +60,7 @@ These steps assume that you have already cloned the repository, if not see [Inst
 ```
 roslaunch turtlebot_rrt rrt_planner.launch
 ```
-![Simple Maze map displayed in Rviz and Gazebo]( turtlebot_rrt/docs/images/turtlebot_rrt_demo.png  "Simple Maze map displayed in Rviz and Gazebo")
+![alt tag]( docs/images/turtlebot_rrt_demo.png  "Simple Maze map displayed in Rviz and Gazebo")
 
 2. To set a goal for the robot switch to the Rviz window and and click "2D Nav Goal" at the top and select on the map where you want the robot to go.
 
@@ -66,12 +78,6 @@ TODO: Add screenshot of successful tests and link to coveralls test coverage
 
 ## Issues
 Issue tracking sheet can be found with the [Sprint Backlog](https://docs.google.com/spreadsheets/d/11MImRGM0dvr5bSlyq22xXTaM7s8ReXDSpWUyN7IlM3k/edit?usp=sharing) in the Issues tab.
-
-Summary:
-1. TR-1 Coveralls not recognizing build and running coverage tests
-
-## API
-TODO
 
 ## SIP
 - [Sprint Backlog and Issue Tracking](https://docs.google.com/spreadsheets/d/11MImRGM0dvr5bSlyq22xXTaM7s8ReXDSpWUyN7IlM3k/edit?usp=sharing)
