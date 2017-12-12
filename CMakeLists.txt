@@ -10,6 +10,7 @@ find_package(catkin REQUIRED
     costmap_2d
     base_local_planner
     pluginlib
+    visualization_msgs
 )
 
 include_directories(
@@ -28,6 +29,7 @@ catkin_package(
     costmap_2d
     base_local_planner
     nav_core
+    visualization_msgs
 )
 
 add_library(${PROJECT_NAME} 
@@ -58,6 +60,6 @@ install(FILES rrt_planner_plugin.xml
 
 # Testing
 if (CATKIN_ENABLE_TESTING)
-	catkin_add_gtest(rrt_test test/turtlebot_rrt_test.cc)
+	catkin_add_gtest(rrt_test test/turtlebotrrt_test.cc)
 	target_link_libraries(rrt_test ${catkin_LIBRARIES})
 endif()

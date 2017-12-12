@@ -31,12 +31,34 @@
  */
 
 #include "turtlebot_rrt/turtlebot_rrt.h"
-
 #include <gtest/gtest.h>
 
 TEST(DummyTests, booleanTest) {
     bool dummy = true;
     EXPECT_TRUE(dummy);
+}
+
+TEST(VertexTests, constructor) {
+    RRTPath::Vertex test_vertex, root_node;
+    std::vector<RRTPath::Vertex> vertex_list;
+
+    EXPECT_EQUALS(vertex_list.size(), 1);
+
+    root_node.x = 0;
+    root_node.y = 0;
+    root_node.index = vertex_list.size();
+    root_node.parent_index = nullptr;
+
+    vertex_list.push_back(root_node);
+
+    EXPECT_EQUALS(vertex_list.size(), 1);
+
+    test_vertex.x = 3;
+    test_vertex.y = 5;
+    test_vertex.index = vertex_list.size();
+    test_vertex.parent_index = root_node.index;
+
+    EXPECT_EQUALS(vertex_list.size(), 2);
 }
 
 int main(int argc, char **argv) {
