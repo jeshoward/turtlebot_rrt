@@ -57,8 +57,8 @@
 #include <move_base_msgs/MoveBaseGoal.h>
 #include <move_base_msgs/MoveBaseActionGoal.h>
 
-#include "sensor_msgs/LaserScan.h"
-#include "sensor_msgs/PointCloud2.h"
+#include <sensor_msgs/LaserScan.h>
+#include <sensor_msgs/PointCloud2.h>
 
 #include <nav_msgs/Odometry.h>
 #include <nav_msgs/OccupancyGrid.h>

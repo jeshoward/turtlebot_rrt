@@ -1,11 +1,4 @@
 Checking src/turtlebot_rrt.cc...
-[/opt/ros/kinetic/include/ros/console.h:46]: (information) Include file: "log4cxx/level.h" not found.
-[/opt/ros/kinetic/include/tf/transform_listener.h:43]: (information) Include file: "boost/thread.hpp" not found.
-[/opt/ros/kinetic/include/tf2_ros/transform_listener.h:42]: (information) Include file: "boost/thread.hpp" not found.
-[/opt/ros/kinetic/include/pluginlib/class_loader.h:32]: (information) Include file: "boost/algorithm/string.hpp" not found.
-[/opt/ros/kinetic/include/pluginlib/class_loader.h:40]: (information) Include file: "tinyxml.h" not found.
-[/opt/ros/kinetic/include/pluginlib/class_loader_imp.h:42]: (information) Include file: "boost/bind.hpp" not found.
-[/opt/ros/kinetic/include/pluginlib/class_loader_imp.h:43]: (information) Include file: "boost/filesystem.hpp" not found.
 1/2 files checked 50% done
 Checking src/vertex.cc...
 2/2 files checked 100% done
