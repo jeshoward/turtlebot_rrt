@@ -69,6 +69,9 @@
 #include <tf/transform_datatypes.h>
 #include <tf/transform_listener.h>
 
+#include <visualization_msgs/Marker.h>
+#include <visualization_msgs/MarkerArray.h>
+
 /** for global path planner interface **/
 #include <costmap_2d/costmap_2d_ros.h>
 #include <costmap_2d/costmap_2d.h>
@@ -124,10 +127,26 @@ namespace turtlebot_rrt {
          * @brief ROS node handle
          */
         ros::NodeHandle node_handle_;
+      /**
+      * @brief publishes the RRT structure
+      */
+      ros::Publisher pub_tree_;
+      /**
+       * @brief obstacles
+       */
+      std::vector<bool> obstacle_map_;
         /**
          * @brief The ROS wrapper for the costmap the controller will use
          */
         costmap_2d::Costmap2DROS* costmap_ros_;
+      /**
+      * @brief the max number of iterations to try and find a path
+      */
+      int max_iterations_;
+      /**
+      * @brief the current number of iterations
+      */
+      int current_iterations_;
         /**
          * @brief The ROS wrapper for the costmap the controller will use
          */
@@ -180,6 +199,14 @@ namespace turtlebot_rrt {
          * @brief Height of the 2D map
          */
         int map_height_;
+      /**
+      * @brief width of 2d map in cells
+      */
+      unsigned int map_width_cells_;
+      /**
+      * @brief height of 2d map in cells
+      */
+      unsigned int map_height_cells_;
         /**
          * @brief List of vertices
          */
@@ -252,6 +279,11 @@ namespace turtlebot_rrt {
         build_plan(int goal_index,
                    const geometry_msgs::PoseStamped& start, 
                    const geometry_msgs::PoseStamped& goal);
+      
+      /**
+       * @brief call back for the map occupancy layer
+       */
+      void map_call_back(const nav_msgs::OccupancyGrid::ConstPtr& msg);
     };
 }
 #endif // SRC_TURTLEBOT_RRT_H_

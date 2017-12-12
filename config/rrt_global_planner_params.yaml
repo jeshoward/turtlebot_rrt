@@ -1,6 +1,12 @@
 RRTPlanner:
   visualize_potential: false
-  allow_unknown: false
+  allow_unknown: true
   planner_window_x: 0.0
   planner_window_y: 0.0
   default_tolerance: 0.0
+  step_size: 2.5
+  delta: 1
+  run_time: 5
+  max_iterations: 200000
+  goal_radius: 1
+  

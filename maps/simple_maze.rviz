@@ -13,6 +13,7 @@ Panels:
         - /Path1
         - /Path2
         - /Marker1
+        - /Goal1
       Splitter Ratio: 0.5
     Tree Height: 614
   - Class: rviz/Selection
@@ -300,6 +301,21 @@ Visualization Manager:
       Namespaces:
         {}
       Queue Size: 100
+      Value: true
+    - Alpha: 1
+      Axes Length: 1
+      Axes Radius: 0.100000001
+      Class: rviz/Pose
+      Color: 0; 255; 0
+      Enabled: true
+      Head Length: 0
+      Head Radius: 0
+      Name: Goal
+      Shaft Length: 0.25
+      Shaft Radius: 0.25
+      Shape: Arrow
+      Topic: /move_base/current_goal
+      Unreliable: false
       Value: true
   Enabled: true
   Global Options:
