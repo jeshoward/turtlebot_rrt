@@ -2,14 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(turtlebot_rrt)
 add_definitions(-std=c++11 -Wall -Werror)
 
-option(COVERAGE "Generate Coverage Data" OFF)
-
-if (COVERAGE)
-    include(CodeCoverage)
-    message(STATUS "Enabled generation of code coverage information.")
-    set(COVERAGE_SRCS src/turtlebot_rrt.cc src/vertex.cc include/turtlebot_rrt/turtlebot_rrt.h include/turtlebot_rrt/vertex.h)
-    set(CMAKE_CXX_FLAGS "-fprofile-arc -ftest-coverage ${CMAKE_CXX_FLAGS}")
-endif()
+option(COVERALLS "Generate Coveralls Data" OFF)
 
 find_package(catkin REQUIRED 
   COMPONENTS
@@ -68,11 +61,12 @@ install(FILES rrt_planner_plugin.xml
 
 # Testing
 if (CATKIN_ENABLE_TESTING)
-	catkin_add_gtest(
-  rrt_test 
-    test/turtlebotrrt_test.cc
-    test/vertex_test.cc
-    test/rrtpath_test.cc
+  catkin_add_gtest(
+    rrt_test 
+      test/turtlebotrrt_test.cc
+      test/vertex_test.cc
+      test/rrtpath_test.cc
   )
-	target_link_libraries(rrt_test ${catkin_LIBRARIES} ${PROJECT_NAME})
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 --coverage")
+  target_link_libraries(rrt_test ${catkin_LIBRARIES} ${PROJECT_NAME})
 endif()
