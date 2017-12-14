@@ -1,10 +1,10 @@
 /*
- * @copyright Copyright (C) 2017, Jessica Howard 
+ * @copyright Copyright (C) 2017, Jessica Howard
  * @author Jessica Howard
  * @file turtlebot_rrt/src/vertex.cc
  *
- * @brief Small class to maintain information held in vertices 
- * 
+ * @brief Small class to maintain information held in vertices
+ *
  * @license 3-Clause BSD License
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -13,9 +13,10 @@
  *   * Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- *   * Neither the names of Stanford University or Willow Garage, Inc. nor the names of its
- *     contributors may be used to endorse or promote products derived from
- *     this software without specific prior written permission.
+ *   * Neither the names of Stanford University or Willow Garage, Inc. nor
+ *     the names of its contributors may be used to endorse or promote
+ *     products derived from this software without specific prior written
+ *     permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -33,23 +34,35 @@
 #include "turtlebot_rrt/vertex.h"
 
 namespace turtlebot_rrt {
+  Vertex::Vertex(float x, float y, int index, int parent_index) {
+    x_ = x;
+    y_ = y;
+    index_ = index;
+    parent_index_ = parent_index;
+  }
 
-    Vertex::Vertex(float x, float y, int index, int parent_index) {
-        x_ = x;
-        y_ = y;
-        index_ = index;
-        parent_index_ = parent_index;
-    }
+  void Vertex::set_location(float x, float y) {
+    x_ = x;
+    y_ = y;
+  }
 
-    std::pair<float, float> Vertex::get_location() {
-        return std::pair<float, float>(Vertex::x_, Vertex::y_);
-    }
+  void Vertex::set_index(int index) {
+    index_ = index;
+  }
 
-    int Vertex::get_index() {
-        return Vertex::index_;
-    }
+  void Vertex::set_parent(int parent_index) {
+    parent_index_ = parent_index;
+  }
 
-    int Vertex::get_parent() {
-        return Vertex::parent_index_;
-    }
+  std::pair<float, float> Vertex::get_location() {
+    return std::pair<float, float>(x_, y_);
+  }
+
+  int Vertex::get_index() {
+    return index_;
+  }
+
+  int Vertex::get_parent() {
+    return parent_index_;
+  }
 }  // namespace turtlebot_rrt

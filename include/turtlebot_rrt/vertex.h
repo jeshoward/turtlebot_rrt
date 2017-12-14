@@ -1,10 +1,10 @@
 /*
- * @copyright Copyright (C) 2017, Jessica Howard 
+ * @copyright Copyright (C) 2017, Jessica Howard
  * @author Jessica Howard
  * @file turtlebot_rrt/include/turtlebot_rrt/vertex.h
  *
- * @brief Small class to maintain information held in vertices 
- * 
+ * @brief Small class to maintain information held in vertices
+ *
  * @license 3-Clause BSD License
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -13,9 +13,10 @@
  *   * Redistributions in binary form must reproduce the above copyright
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
- *   * Neither the names of Stanford University or Willow Garage, Inc. nor the names of its
- *     contributors may be used to endorse or promote products derived from
- *     this software without specific prior written permission.
+ *   * Neither the names of Stanford University or Willow Garage, Inc. nor
+ *     the names of its contributors may be used to endorse or promote 
+ *     products derived from this software without specific prior written 
+ *     permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -37,70 +38,112 @@
 #include <utility>
 
 namespace turtlebot_rrt {
+	class VertexInterface {
+    public:
+     VertexInterface() {}
+     VertexInterface(float x, float y, int index, int parent_index) {}
+     virtual ~VertexInterface() {}
+     virtual void set_location(float x, float y) = 0;
+     virtual void set_index(int index) = 0;
+     virtual void set_parent(int parent) = 0;
+     virtual std::pair<float, float> get_location() = 0;
+     virtual int get_index() = 0;
+     virtual int get_parent() = 0;
+  };
 
-    class Vertex {
+  class Vertex : public VertexInterface {
     private:
-        /**
-         * @brief the x coordinate of the vertex
-         */
-        float x_;
-        /**
-         * @brief the y coordinate of the vertex
-         */
-        float y_;
+     /**
+      * @brief the x coordinate of the vertex
+      */
+     float x_;
 
-        /**
-         * @brief the index of the vertex
-         */
-        int index_;
+     /**
+      * @brief the y coordinate of the vertex
+      */
+     float y_;
 
-        /**
-         * @brief the vertex's parent index
-         */
-        int parent_index_;
+     /**
+      * @brief the index of the vertex
+      */
+     int index_;
+
+     /**
+      * @brief the vertex's parent index
+      */
+     int parent_index_;
 
     public:
-        /**
-         * @brief the constructor for a Vertex
-         * @param x the x coordinate of the vertex
-         * @param y the y coordinate of the vertex
-         * @param index the index of the vertex
-         * @param parent_index the index of the parent vertex
-         */
-        Vertex(float x, float y, int index, int parent_index);
+     /**
+      * @brief Simple Vertex constructor
+      */
+     Vertex() {}
 
-        /**
-         * @brief returns the x,y location of the vertex
-         * @return returns std::pair<x,y>
-         */
-        std::pair<float, float> get_location();
-        
-        /**
-         * @brief returns the index of the vertex
-         * @return index of the vertex
-         */
-        int get_index();
+     /**
+      * @brief the constructor for a Vertex
+      * @param x the x coordinate of the vertex
+      * @param y the y coordinate of the vertex
+      * @param index the index of the vertex
+      * @param parent_index the index of the parent vertex
+      */
+     Vertex(float x, float y, int index, int parent_index);
 
-        /**
-         * @brief returns the index of the parent vertex
-         * @return returns the index of the parent
-         */
-        int get_parent();
+     /**
+      * @brief destructor
+      */
+     ~Vertex() {}
 
-        /**
-         * @brief overload of == operator
-         */
-        bool operator==(const Vertex& v) {
-            return (x_ == v.x_ && y_ == v.y_ && parent_index_ == v.parent_index_);
-        }
+     /**
+      * @brief sets the location
+      * @param x x location of vertex
+      * @param y y location of vertex
+      */
+     void set_location(float x, float y);
+     
+     /**
+      * @brief sets the index of the vertex
+      * @param index index of the vertex
+      */
+     void set_index(int index);
+     
+     /**
+      * @brief sets the parent vertex
+      * @param parent_index index of the parent vertex
+      */
+     void set_parent(int index);
 
-        /**
-         * @brief overload of != operator
-         */
-        bool operator!=(const Vertex& v) {
-            return (x_ != v.x_ || y_ != v.y_ || parent_index_ != v.parent_index_);
-        }
-    };
-}
+     /**
+      * @brief returns the x,y location of the vertex
+      * @return returns std::pair<x,y>
+      */
+     std::pair<float, float> get_location();
+
+     /**
+      * @brief returns the index of the vertex
+      * @return index of the vertex
+      */
+     int get_index();
+
+     /**
+      * @brief returns the index of the parent vertex
+      * @return returns the index of the parent
+      */
+     int get_parent();
+
+     /**
+      * @brief overload of == operator
+      */
+       bool operator==(const Vertex& v) {
+         return (x_ == v.x_ && y_ == v.y_ && parent_index_ == v.parent_index_);
+       }
+
+     /**
+      * @brief overload of != operator
+      */
+     bool operator!=(const Vertex& v) {
+       return (x_ != v.x_ || y_ != v.y_ || parent_index_ != v.parent_index_);
+     }
+  };
+}  // namespace turtlebot_rrt
 
 #endif /* INCLUDE_VERTEX_H_ */
