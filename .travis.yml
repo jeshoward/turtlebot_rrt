@@ -1,16 +1,39 @@
-sudo: required
-language: cpp
-services:
-  - docker
-  
+# This config file for Travis CI utilizes ros-industrial/industrial_ci package.
+# For more info for the package, see https://github.com/ros-industrial/industrial_ci/blob/master/README.rst
+sudo: required 
+dist: trusty 
+language: cpp 
+compiler:
+  - gcc
+notifications:
+  email:
+    on_success: never
+    on_failure: never
+#    recipients:
+#      - shaotu.jia
 env:
-  global:
-    - toolset_branch: master
-    - server_type: travis
-    - ros_release_name: kinetic
-    - ubuntu_version_name: xenial
-    - used_modules: check_cache, check_build, code_style_check, check_deb_make, codecov_tool
-    - remote_shell_script: 'https://raw.githubusercontent.com/shadow-robot/sr-build-tools/$toolset_branch/bin/sr-run-ci-build.sh'
+  matrix:
+    - USE_DEB=true  ROS_DISTRO="kinetic" ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
+    - USE_DEB=true  ROS_DISTRO="kinetic" ROS_REPOSITORY_PATH=http://packages.ros.org/ros-shadow-fixed/ubuntu
 
-script:
-  - curl -s "$( echo "$remote_shell_script" | sed 's/#/%23/g' )" | bash -x /dev/stdin "$toolset_branch" $server_type $used_modules
+matrix:
+  allow_failures:
+    - env: USE_DEB=true  ROS_DISTRO="kinetic"   ROS_REPOSITORY_PATH=http://packages.ros.org/ros/ubuntu
+    - env: USE_DEB=true  ROS_DISTRO="kinetic"   ROS_REPOSITORY_PATH=http://packages.ros.org/ros-shadow-fixed/ubuntu
+
+install:
+  - sudo apt-get install -y -qq lcov
+  - git clone https://github.com/ros-industrial/industrial_ci.git .ci_config
+
+ 
+script: 
+  - source .ci_config/travis.sh
+#  - source ./travis.sh  # Enable this when you have a package-local script
+
+# Generate code coverage, other artifacts
+# ---------------------------------------
+after_sucess:
+  #- coveralls --data_file=.coverage
+  - coveralls --root .. -E ".*external.*" -E ".*CMakeFiles.*" -E ".*test/.*.cpp.*"
+
+
