@@ -1,11 +1,11 @@
 /*
- * @copyright Copyright (C) 2017, Jessica Howard 
+ * @copyright Copyright (C) 2017, Jessica Howard
  * @author Jessica Howard
- * @file turtlebot_rrt/test/turtlebotrrt_test.cc
+ * @file turtlebot_rrt/test/vertex_test.cc
  *
- * @brief Unit tests for the RRT path planning algorithm. Tests are located in
- * test/vertex_test.cc and test/rrtpath_test.cc
- * 
+ * @brief Unit tests for the Vertex class that is required in the RRTPath
+ * global path planning plugin
+ *
  * @license 3-Clause BSD License
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -15,8 +15,8 @@
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
  *   * Neither the names of Stanford University or Willow Garage, Inc. nor
- *     the names of its contributors may be used to endorse or promote 
- *     products derived from this software without specific prior written 
+ *     the names of its contributors may be used to endorse or promote
+ *     products derived from this software without specific prior written
  *     permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -33,8 +33,33 @@
  */
 
 #include <gtest/gtest.h>
+#include "turtlebot_rrt/vertex.h"
 
-int main(int argc, char **argv) {
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+TEST(VertexTest, SingleVertex) {
+  turtlebot_rrt::Vertex vertex(5.0, 7.5, 3, 2);
+  
+  // test get location
+  EXPECT_FLOAT_EQ(vertex.get_location().first, 5.0);
+  EXPECT_FLOAT_EQ(vertex.get_location().second, 7.5);
+  
+  // test get index
+  EXPECT_EQ(vertex.get_index(), 3);
+  
+  // test get_parent
+  EXPECT_EQ(vertex.get_parent(), 2);
+  
+  // use setter methods and retest
+  vertex.set_location(3.0, 6.23);
+  vertex.set_index(12);
+  vertex.set_parent(1);
+  
+  // test get location
+  EXPECT_FLOAT_EQ(vertex.get_location().first, 3.0);
+  EXPECT_FLOAT_EQ(vertex.get_location().second, 6.23);
+  
+  // test get index
+  EXPECT_EQ(vertex.get_index(), 12);
+  
+  // test get_parent
+  EXPECT_EQ(vertex.get_parent(), 1);
 }

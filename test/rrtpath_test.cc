@@ -1,11 +1,10 @@
 /*
- * @copyright Copyright (C) 2017, Jessica Howard 
+ * @copyright Copyright (C) 2017, Jessica Howard
  * @author Jessica Howard
- * @file turtlebot_rrt/test/turtlebotrrt_test.cc
+ * @file turtlebot_rrt/test/rrtpath_test.cc
  *
- * @brief Unit tests for the RRT path planning algorithm. Tests are located in
- * test/vertex_test.cc and test/rrtpath_test.cc
- * 
+ * @brief Unit tests for the RRT path planning algorithm
+ *
  * @license 3-Clause BSD License
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -15,8 +14,8 @@
  *     notice, this list of conditions and the following disclaimer in the
  *     documentation and/or other materials provided with the distribution.
  *   * Neither the names of Stanford University or Willow Garage, Inc. nor
- *     the names of its contributors may be used to endorse or promote 
- *     products derived from this software without specific prior written 
+ *     the names of its contributors may be used to endorse or promote
+ *     products derived from this software without specific prior written
  *     permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -32,9 +31,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "turtlebot_rrt/turtlebot_rrt.h"
 #include <gtest/gtest.h>
 
-int main(int argc, char **argv) {
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+TEST(DummyTests, booleanTest) {
+    bool dummy = true;
+    EXPECT_TRUE(dummy);
 }

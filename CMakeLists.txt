@@ -38,12 +38,11 @@ add_library(${PROJECT_NAME}
 )
 
 add_dependencies(turtlebot_rrt ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(turtlebot_rrt
-  ${PROJECT_NAME}
+target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
 )
 
-install(TARGETS ${PROJECT_NAME} turtlebot_rrt
+install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -60,6 +59,11 @@ install(FILES rrt_planner_plugin.xml
 
 # Testing
 if (CATKIN_ENABLE_TESTING)
-	catkin_add_gtest(rrt_test test/turtlebotrrt_test.cc)
-	target_link_libraries(rrt_test ${catkin_LIBRARIES})
+	catkin_add_gtest(
+  rrt_test 
+    test/turtlebotrrt_test.cc
+    test/vertex_test.cc
+    test/rrtpath_test.cc
+  )
+	target_link_libraries(rrt_test ${catkin_LIBRARIES} ${PROJECT_NAME})
 endif()
