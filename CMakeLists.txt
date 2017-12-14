@@ -7,6 +7,7 @@ option(COVERALLS "Generate Coveralls Data" OFF)
 find_package(catkin REQUIRED 
   COMPONENTS
     roscpp
+    roslint
     tf
     nav_core
     costmap_2d
@@ -44,35 +45,28 @@ target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
 )
 
+
+# Testing
+if (CATKIN_ENABLE_TESTING)
+  # vertex
+  catkin_add_gtest(vertex_test test/vertex_test.cc)
+  target_link_libraries(vertex_test ${catkin_LIBRARIES} ${PROJECT_NAME})
+
+  # rrt
+  find_package(rostest REQUIRED)
+  add_rostest_gtest(rrt_test test/rrt_test.test test/rrtpath_test.cc)
+  target_link_libraries(rrt_test ${PROJECT_NAME} ${catkin_LIBRARIES})
+
+  find_package(catkin REQUIRED COMPONENTS roslint)
+    roslint_cpp(src/turtlebot_rrt.cc src/vertex.cc)
+    roslint_add_test()
+endif (CATKIN_ENABLE_TESTING)
+
 install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
-install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-  PATTERN ".svn" EXCLUDE
-)
-
-install(FILES rrt_planner_plugin.xml
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)  
-
-# Testing
-if (CATKIN_ENABLE_TESTING)
-  find_package(rostest REQUIRED)
-  add_rostest_gtest(rrt_test_node test/rrt_test.test
-    test/turtlebotrrt_test.cc
-    test/vertex_test.cc
-    test/rrtpath_test.cc
-)
-#  catkin_add_gtest(
-#    rrt_test 
-#      test/turtlebotrrt_test.cc
-#      test/vertex_test.cc
-#      test/rrtpath_test.cc
-#  )
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 --coverage")
-  target_link_libraries(rrt_test_node ${catkin_LIBRARIES} ${PROJECT_NAME})
-endif()
+install(DIRECTORY include/${PROJECT_NAME}/ DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+install(FILES rrt_planner_plugin.xml DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})  

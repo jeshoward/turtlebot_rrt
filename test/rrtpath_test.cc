@@ -31,10 +31,38 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "turtlebot_rrt/turtlebot_rrt.h"
 #include <gtest/gtest.h>
+#include <ros/ros.h>
+#include <tf/transform_listener.h>
+#include <costmap_2d/costmap_2d_ros.h>
+#include <turtlebot_rrt/turtlebot_rrt.h>
 
-TEST(DummyTests, booleanTest) {
-    bool dummy = true;
-    EXPECT_TRUE(dummy);
+namespace turtlebot_rrt {
+
+  TEST(RRTPath, obstacleMap) {
+    EXPECT_TRUE(true);
+  }
+};
+
+turtlebot_rrt::RRTPlanner* rrt = NULL;
+costmap_2d::Costmap2DROS* cost_map = NULL;
+
+int main(int argc, char** argv) {
+  ros::init(argc, argv, "rrt_test");
+  testing::InitGoogleTest(&argc, argv);
+
+  unsigned int cells_size_x = 384;
+  unsigned int cells_size_y = 384;
+  double resolution = 0.05;
+  double origin_x = -10.0;
+  double origin_y = -10.0;
+
+  cost_map = new costmap_2d::Costmap2DROS(cells_size_x,
+                                          cells_size_y,
+                                          resolution,
+                                          origin_x,
+                                          origin_y);
+  rrt = new turtlebot_rrt::RRTPlanner("turtlebot_rrt", cost_map);
+
+  return RUN_ALL_TESTS();
 }

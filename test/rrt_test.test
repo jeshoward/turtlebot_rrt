@@ -1,8 +1,13 @@
 <launch>
-  <!-- launch the map server -->
+  <param name="/use_sim_time" value="true"/>
+  
   <node name="map_server" pkg="map_server" type="map_server" args="$(find turtlebot_rrt)/maps/simple_maze.yaml" respawn="false">
     <param name="frame_id" value="map"/>
   </node>
-  <test test-name="rrt_test_node" pkg="turtlebot_rrt" type="rrt_test_node"/>
   
+  <rosparam file="$(find turtlebot_rrt)/test/costmap_params.yaml" command="load"/>
+  
+  <test test-name="rrt_test" pkg="turtlebot_rrt" type="rrt_test" time-limit="10">  
+    <param name="wait_time" value="5.0"/>
+  </test>
 </launch>
