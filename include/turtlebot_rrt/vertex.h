@@ -31,15 +31,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef INCLUDE_VERTEX_H_
-#define INCLUDE_VERTEX_H_
+#ifndef INCLUDE_TURTLEBOT_RRT_VERTEX_H_
+#define INCLUDE_TURTLEBOT_RRT_VERTEX_H_
 
 #include <cmath>
 #include <utility>
 
 namespace turtlebot_rrt {
-  class Vertex {
-    private:
+class Vertex {
+ private:
      /**
       * @brief the x coordinate of the vertex
       */
@@ -60,7 +60,7 @@ namespace turtlebot_rrt {
       */
      int parent_index_;
 
-    public:
+ public:
      /**
       * @brief Simple Vertex constructor
       */
@@ -86,13 +86,13 @@ namespace turtlebot_rrt {
       * @param y y location of vertex
       */
      void set_location(float x, float y);
-     
+
      /**
       * @brief sets the index of the vertex
       * @param index index of the vertex
       */
      void set_index(int index);
-     
+
      /**
       * @brief sets the parent vertex
       * @param parent_index index of the parent vertex
@@ -130,7 +130,7 @@ namespace turtlebot_rrt {
      bool operator!=(const Vertex& v) {
        return (x_ != v.x_ || y_ != v.y_ || parent_index_ != v.parent_index_);
      }
-  };
+};
 }  // namespace turtlebot_rrt
 
-#endif /* INCLUDE_VERTEX_H_ */
+#endif  // INCLUDE_TURTLEBOT_RRT_VERTEX_H_

@@ -35,41 +35,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef SRC_TURTLEBOT_RRT_H_
-#define SRC_TURTLEBOT_RRT_H_
-
-/** include standard libraries **/
-#include <iostream>
-#include <cmath>
-#include <set>
-#include <string>
-#include <vector>
-#include <boost/random.hpp>
+#ifndef INCLUDE_TURTLEBOT_RRT_TURTLEBOT_RRT_H_
+#define INCLUDE_TURTLEBOT_RRT_TURTLEBOT_RRT_H_
 
 /** include ROS libraries **/
 #include <ros/ros.h>
 
 #include <move_base_msgs/MoveBaseAction.h>
-
-#include <geometry_msgs/Twist.h>
-#include <geometry_msgs/PoseWithCovarianceStamped.h>
-#include <move_base_msgs/MoveBaseGoal.h>
-#include <move_base_msgs/MoveBaseActionGoal.h>
-
-#include <sensor_msgs/LaserScan.h>
-#include <sensor_msgs/PointCloud2.h>
-
-#include <nav_msgs/Odometry.h>
-#include <nav_msgs/OccupancyGrid.h>
-#include <nav_msgs/Path.h>
-#include <nav_msgs/GetPlan.h>
-
-#include <tf/tf.h>
-#include <tf/transform_datatypes.h>
-#include <tf/transform_listener.h>
-
-#include <visualization_msgs/Marker.h>
-#include <visualization_msgs/MarkerArray.h>
 
 /** for global path planner interface **/
 #include <costmap_2d/costmap_2d_ros.h>
@@ -80,29 +52,21 @@
 #include <base_local_planner/world_model.h>
 #include <base_local_planner/costmap_model.h>
 
+/** include standard libraries **/
+#include <iostream>
+#include <cmath>
+#include <set>
+#include <string>
+#include <vector>
+#include <utility>
+#include <boost/random.hpp>
+
 /** Local includes **/
 #include "turtlebot_rrt/vertex.h"
 
 namespace turtlebot_rrt {
-  class RRTPlannerInterface {
-    public:
-     RRTPlannerInterface() {}
-     RRTPlannerInterface(std::string name,
-                            costmap_2d::Costmap2DROS* costmap_ros) {}
-     virtual ~RRTPlannerInterface() {}
-     virtual void initialize(std::string name,
-                             costmap_2d::Costmap2DROS* costmap_ros) = 0;
-     virtual bool makePlan(const geometry_msgs::PoseStamped& start,
-                           const geometry_msgs::PoseStamped& goal,
-                           std::vector<geometry_msgs::PoseStamped>& plan) = 0;
-
-    private:
-     
-  };
-
-  class RRTPlanner : public nav_core::BaseGlobalPlanner, RRTPlannerInterface {
-    public:
-
+class RRTPlanner : public nav_core::BaseGlobalPlanner {
+ public:
      /**
      * @brief Constructor for RRTPlanner
      */
@@ -134,9 +98,108 @@ namespace turtlebot_rrt {
                    const geometry_msgs::PoseStamped& goal,
                    std::vector<geometry_msgs::PoseStamped>& plan);
 
+    /**
+    * @brief builds the obstacle map from the costmap data
+    * @param map_height height of the map in cells
+    * @param map_width width of the map in cells
+    * @param costmap the costmap
+    */
+    std::vector<bool> buildObstacleMap(unsigned int map_height,
+                                       unsigned int map_width,
+                                       costmap_2d::Costmap2D* costmap);
 
+    /**
+    * @brief returns the rrt vertex tree
+    */
+    std::vector<turtlebot_rrt::Vertex> getVertexTree() {
+      return vertex_list_;
+    }
 
-    private:
+     /**
+     * @brief Gets a random point in the map space
+     * @return returns an x,y pair
+     */
+     std::pair<float, float> GetRandomPoint(float map_width, float map_height);
+
+     /**
+     * @brief Gets the closest vertex to the given point
+     * @param random_point A point in the map space
+     * @param vertex_list the rrt vertex tree
+     * @return the index of the closest vertex to the given point
+     */
+     int GetClosestVertex(std::pair<float, float> random_point,
+                          std::vector<turtlebot_rrt::Vertex> vertex_list);
+
+    /**
+    * @brief adds a new vertex to the rrt vertex tree
+    * @param new_vertex the new vertex to be added
+    */
+    void addVertex(turtlebot_rrt::Vertex new_vertex);
+
+     /**
+     * @brief Euclidean distance between two points
+     * @param start_point starting point
+     * @param end_point ending point
+     * @return euclidean distance between the points
+     */
+     float GetDistance(std::pair<float, float> start_point,
+                       std::pair<float, float> end_point);
+
+     /**
+     * @brief Moves from the closest vertex towards the random point
+     * @detail Begins at the closest point and attempts to move step_size_
+     * towards the random point. Each step along the way at delta_ intervals
+     * is checked for obstacles. If an obstacle is encountered the function
+     * returns false. If it makes it from the closest vertex to step_size_
+     * towards the random point a new vertex is created and added to
+     * vertex_list_ and the function returns true.
+     * @return true if a move was made, false if blocked by obstacle
+     */
+     bool MoveTowardsPoint(int closest_vertex,
+                           std::pair<float, float> random_point,
+                           std::vector<turtlebot_rrt::Vertex> vertex_list);
+
+     /**
+     * @brief Is vertex within goal_radius_ of the goal
+     * @param the vertex to be checked
+     * @return true if within goal_radius_
+     */
+     bool ReachedGoal(int new_vertex,
+                      std::vector<turtlebot_rrt::Vertex> vertex_list,
+                      std::pair<float, float> goal);
+
+     /**
+     * @brief builds the plan from vertices and returns in PoseStamped
+     * @param goal_index the index of the vertex that has reached the goal
+     * @param start the starting location of the robot as passed to makePlan
+     * @param goal the goal location of the robot as passed to makePlan
+     * @return a vector of geometry_msgs:PoseStamped from the start to the goal
+     */
+     std::vector<geometry_msgs::PoseStamped>
+       BuildPlan(int goal_index,
+                 const geometry_msgs::PoseStamped& start,
+                 const geometry_msgs::PoseStamped& goal);
+
+     /**
+     * @brief returns the best path
+     * @param start starting point of robot
+     * @param goal goal point
+     * @return returns the index of the point that reaches the goal
+     */
+     int FindPath(const geometry_msgs::PoseStamped& start,
+                  const geometry_msgs::PoseStamped& goal);
+
+     /**
+     * @brief Checks if the path is safe between start_point and end_point
+     * @param start_point starting point location
+     * @param end_point ending point location
+     * @return true if path between points does not intersect obstacles
+     */
+     bool IsSafe(std::pair<float, float> start_point,
+                 std::pair<float, float> end_point,
+                 std::vector<bool> obstacle_map);
+
+ private:
      /**
      * @brief ROS node handle
      */
@@ -241,78 +304,6 @@ namespace turtlebot_rrt {
      * @brief List of vertices
      */
      std::vector<turtlebot_rrt::Vertex> vertex_list_;
-
-     /**
-     * @brief Gets a random point in the map space
-     * @return returns an x,y pair
-     */
-     std::pair<float, float> GetRandomPoint();
-
-     /**
-     * @brief Gets the closest vertex to the given point
-     * @param A point in the map space
-     * @return the index of the closest vertex to the given point
-     */
-     int GetClosestVertex(std::pair<float, float> random_point);
-
-     /**
-     * @brief Moves from the closest vertex towards the random point
-     * @detail Begins at the closest point and attempts to move step_size_
-     * towards the random point. Each step along the way at delta_ intervals
-     * is checked for obstacles. If an obstacle is encountered the function
-     * returns false. If it makes it from the closest vertex to step_size_
-     * towards the random point a new vertex is created and added to
-     * vertex_list_ and the function returns true.
-     * @return true if a move was made, false if blocked by obstacle
-     */
-     bool MoveTowardsPoint(int closest_vertex,
-                           std::pair<float, float> random_point);
-
-     /**
-     * @brief Euclidean distance between two points
-     * @param start_point starting point
-     * @param end_point ending point
-     * @return euclidean distance between the points
-     */
-     float GetDistance(std::pair<float, float> start_point,
-                       std::pair<float, float> end_point);
-
-     /**
-     * @brief Is vertex within goal_radius_ of the goal
-     * @param the vertex to be checked
-     * @return true if within goal_radius_
-     */
-     bool ReachedGoal(int new_vertex);
-
-     /**
-     * @brief returns the best path
-     * @param start starting point of robot
-     * @param goal goal point
-     * @return returns the index of the point that reaches the goal
-     */
-     int FindPath(const geometry_msgs::PoseStamped& start,
-                  const geometry_msgs::PoseStamped& goal);
-
-     /**
-     * @brief Checks if the path is safe between start_point and end_point
-     * @param start_point starting point location
-     * @param end_point ending point location
-     * @return true if path between points does not intersect obstacles
-     */
-     bool IsSafe(std::pair<float, float> start_point,
-                 std::pair<float, float> end_point);
-
-     /**
-     * @brief builds the plan from vertices and returns in PoseStamped
-     * @param goal_index the index of the vertex that has reached the goal
-     * @param start the starting location of the robot as passed to makePlan
-     * @param goal the goal location of the robot as passed to makePlan
-     * @return a vector of geometry_msgs:PoseStamped from the start to the goal
-     */
-     std::vector<geometry_msgs::PoseStamped>
-       BuildPlan(int goal_index,
-                 const geometry_msgs::PoseStamped& start,
-                 const geometry_msgs::PoseStamped& goal);
-  };
-}
-#endif // SRC_TURTLEBOT_RRT_H_
+};
+}  // namespace turtlebot_rrt
+#endif  // INCLUDE_TURTLEBOT_RRT_TURTLEBOT_RRT_H_
