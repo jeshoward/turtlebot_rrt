@@ -38,20 +38,7 @@
 #include <utility>
 
 namespace turtlebot_rrt {
-	class VertexInterface {
-    public:
-     VertexInterface() {}
-     VertexInterface(float x, float y, int index, int parent_index) {}
-     virtual ~VertexInterface() {}
-     virtual void set_location(float x, float y) = 0;
-     virtual void set_index(int index) = 0;
-     virtual void set_parent(int parent) = 0;
-     virtual std::pair<float, float> get_location() = 0;
-     virtual int get_index() = 0;
-     virtual int get_parent() = 0;
-  };
-
-  class Vertex : public VertexInterface {
+  class Vertex {
     private:
      /**
       * @brief the x coordinate of the vertex
