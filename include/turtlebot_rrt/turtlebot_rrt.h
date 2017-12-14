@@ -99,14 +99,12 @@ class RRTPlanner : public nav_core::BaseGlobalPlanner {
                    std::vector<geometry_msgs::PoseStamped>& plan);
 
     /**
-    * @brief builds the obstacle map from the costmap data
-    * @param map_height height of the map in cells
-    * @param map_width width of the map in cells
-    * @param costmap the costmap
+    * @brief returns the obstacle map
+    * @return std::vector<bool> Unsafe cells are false, safe cells are true
     */
-    std::vector<bool> buildObstacleMap(unsigned int map_height,
-                                       unsigned int map_width,
-                                       costmap_2d::Costmap2D* costmap);
+    std::vector<bool> getObstacleMap() {
+      return obstacle_map_;
+    }
 
     /**
     * @brief returns the rrt vertex tree
@@ -119,7 +117,7 @@ class RRTPlanner : public nav_core::BaseGlobalPlanner {
      * @brief Gets a random point in the map space
      * @return returns an x,y pair
      */
-     std::pair<float, float> GetRandomPoint(float map_width, float map_height);
+     std::pair<float, float> GetRandomPoint();
 
      /**
      * @brief Gets the closest vertex to the given point
@@ -127,14 +125,15 @@ class RRTPlanner : public nav_core::BaseGlobalPlanner {
      * @param vertex_list the rrt vertex tree
      * @return the index of the closest vertex to the given point
      */
-     int GetClosestVertex(std::pair<float, float> random_point,
-                          std::vector<turtlebot_rrt::Vertex> vertex_list);
+     int GetClosestVertex(std::pair<float, float> random_point);
 
     /**
     * @brief adds a new vertex to the rrt vertex tree
     * @param new_vertex the new vertex to be added
     */
-    void addVertex(turtlebot_rrt::Vertex new_vertex);
+    void addVertex(turtlebot_rrt::Vertex new_vertex) {
+      vertex_list_.push_back(new_vertex);
+    }
 
      /**
      * @brief Euclidean distance between two points
@@ -156,17 +155,14 @@ class RRTPlanner : public nav_core::BaseGlobalPlanner {
      * @return true if a move was made, false if blocked by obstacle
      */
      bool MoveTowardsPoint(int closest_vertex,
-                           std::pair<float, float> random_point,
-                           std::vector<turtlebot_rrt::Vertex> vertex_list);
+                           std::pair<float, float> random_point);
 
      /**
      * @brief Is vertex within goal_radius_ of the goal
      * @param the vertex to be checked
      * @return true if within goal_radius_
      */
-     bool ReachedGoal(int new_vertex,
-                      std::vector<turtlebot_rrt::Vertex> vertex_list,
-                      std::pair<float, float> goal);
+     bool ReachedGoal(int new_vertex);
 
      /**
      * @brief builds the plan from vertices and returns in PoseStamped
@@ -196,19 +192,13 @@ class RRTPlanner : public nav_core::BaseGlobalPlanner {
      * @return true if path between points does not intersect obstacles
      */
      bool IsSafe(std::pair<float, float> start_point,
-                 std::pair<float, float> end_point,
-                 std::vector<bool> obstacle_map);
+                 std::pair<float, float> end_point);
 
  private:
      /**
      * @brief ROS node handle
      */
      ros::NodeHandle node_handle_;
-
-     /**
-     * @brief publishes the RRT structure
-     */
-     ros::Publisher pub_tree_;
 
      /**
      * @brief obstacles
@@ -221,6 +211,11 @@ class RRTPlanner : public nav_core::BaseGlobalPlanner {
      costmap_2d::Costmap2DROS* costmap_ros_;
 
      /**
+     * @brief The ROS wrapper for the costmap the controller will use
+     */
+     costmap_2d::Costmap2D* costmap_;
+
+     /**
      * @brief the max number of iterations to try and find a path
      */
      int max_iterations_;
@@ -229,11 +224,6 @@ class RRTPlanner : public nav_core::BaseGlobalPlanner {
      * @brief the current number of iterations
      */
      int current_iterations_;
-
-     /**
-     * @brief The ROS wrapper for the costmap the controller will use
-     */
-     costmap_2d::Costmap2D* costmap_;
 
      /**
      * @brief World model associated to the costmap
@@ -279,16 +269,6 @@ class RRTPlanner : public nav_core::BaseGlobalPlanner {
      * @brief y coordinate of goal
      */
      float y_goal_;
-
-     /**
-     * @brief Width of the 2D map
-     */
-     int map_width_;
-
-     /**
-     * @brief Height of the 2D map
-     */
-     int map_height_;
 
      /**
      * @brief width of 2d map in cells
