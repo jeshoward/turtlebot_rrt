@@ -12,8 +12,18 @@ env:
     - used_modules: check_cache, check_build, code_style_check, check_deb_make, codecov_tool
     - remote_shell_script: 'https://raw.githubusercontent.com/shadow-robot/sr-build-tools/$toolset_branch/bin/sr-run-ci-build.sh'
 
+install:
+  # coveralls
+  - sudo apt-get install lcov
+  - gem install coveralls-lcov
+
 script:
   - curl -s "$( echo "$remote_shell_script" | sed 's/#/%23/g' )" | bash -x /dev/stdin "$toolset_branch" $server_type $used_modules
-  
-after_success:
-  - coveralls --root .. -E ".*external.*" -E ".*CMakeFiles.*" -E ".*test/.*.cc.*"
+
+  # run tests
+  - catkin_make run_tests
+  - cd ~/catkin_ws/build
+  - lcov --directory . --capture --output-file coverage.info
+  - lcov --remove coverage.fino '/opt/*' '/usr'*' '*/devel/*' '*test_*' '*_test*' --output-file coverage.info
+  - lcov --list coverage.info
+  - coveralls-lcov coverage.info
