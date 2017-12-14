@@ -61,12 +61,18 @@ install(FILES rrt_planner_plugin.xml
 
 # Testing
 if (CATKIN_ENABLE_TESTING)
-  catkin_add_gtest(
-    rrt_test 
-      test/turtlebotrrt_test.cc
-      test/vertex_test.cc
-      test/rrtpath_test.cc
-  )
+  find_package(rostest REQUIRED)
+  add_rostest_gtest(rrt_test_node test/rrt_test.test
+    test/turtlebotrrt_test.cc
+    test/vertex_test.cc
+    test/rrtpath_test.cc
+)
+#  catkin_add_gtest(
+#    rrt_test 
+#      test/turtlebotrrt_test.cc
+#      test/vertex_test.cc
+#      test/rrtpath_test.cc
+#  )
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 --coverage")
-  target_link_libraries(rrt_test ${catkin_LIBRARIES} ${PROJECT_NAME})
+  target_link_libraries(rrt_test_node ${catkin_LIBRARIES} ${PROJECT_NAME})
 endif()

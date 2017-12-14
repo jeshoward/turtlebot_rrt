@@ -1,0 +1,8 @@
+<launch>
+  <!-- launch the map server -->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find turtlebot_rrt)/maps/simple_maze.yaml" respawn="false">
+    <param name="frame_id" value="map"/>
+  </node>
+  <test test-name="rrt_test_node" pkg="turtlebot_rrt" type="rrt_test_node"/>
+  
+</launch>
