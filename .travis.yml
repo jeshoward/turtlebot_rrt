@@ -17,6 +17,15 @@ install:
   - sudo apt-get install lcov
   - gem install coveralls-lcov
 
+  # catkin
+  - sudo apt-get install -qq -y python-catkin-pkg python-rosdep python-wstool ros-lunar-catkin
+  - sudo pip install -U setuptools
+  - sudo pip install -U catkin_tools
+  - source /opt/ros/kinetic/setup.bashtest
+
+  - sudo rosdep init
+  - rosdep update
+
   # work space
   - mkdir -p ~/catkin_ws/src
   - mv ../turtlebot_rrt/ ~/catkin_ws/src
