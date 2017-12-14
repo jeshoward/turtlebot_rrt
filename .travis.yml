@@ -17,6 +17,14 @@ install:
   - sudo apt-get install lcov
   - gem install coveralls-lcov
 
+  # work space
+  - mkdir -p ~/catkin_ws/src
+  - mv ../turtlebot_rrt/ ~/catkin_ws/src
+  - cd ~/catkin_ws/src
+  - catkin_init_workspace
+  - cd ~/catkin_ws/
+  - catkin_make
+
 script:
   - curl -s "$( echo "$remote_shell_script" | sed 's/#/%23/g' )" | bash -x /dev/stdin "$toolset_branch" $server_type $used_modules
 
