@@ -54,7 +54,7 @@
   
   <!-- Move base -->
   <arg name="step_size" default="2.5"/>
-  <arg name="delta" default="1.0"/>
+  <arg name="delta" default="$(eval arg('step_size') / 2)"/>
   <arg name="max_iterations" default="200000"/>
   <arg name="goal_radius" default="1.0"/>      
   <include file="$(find turtlebot_rrt)/launch/includes/move_base.launch.xml">
