@@ -2,6 +2,15 @@ cmake_minimum_required(VERSION 2.8.3)
 project(turtlebot_rrt)
 add_definitions(-std=c++11 -Wall -Werror)
 
+option(COVERAGE "Generate Coverage Data" OFF)
+
+if (COVERAGE)
+    include(CodeCoverage)
+    message(STATUS "Enabled generation of code coverage information.")
+    set(COVERAGE_SRCS src/turtlebot_rrt.cc src/vertex.cc include/turtlebot_rrt/turtlebot_rrt.h include/turtlebot_rrt/vertex.h)
+    set(CMAKE_CXX_FLAGS "-fprofile-arc -ftest-coverage ${CMAKE_CXX_FLAGS}")
+endif()
+
 find_package(catkin REQUIRED 
   COMPONENTS
     roscpp
