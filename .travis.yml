@@ -18,10 +18,7 @@ install:
   - gem install coveralls-lcov
 
   # catkin
-  - sudo apt-get install -qq -y python-catkin-pkg python-rosdep python-wstool ros-lunar-catkin
-  - sudo pip install -U setuptools
-  - sudo pip install -U catkin_tools
-  - source /opt/ros/kinetic/setup.bashtest
+  - sudo apt-get install ros-lunar-catkin
 
   - sudo rosdep init
   - rosdep update
