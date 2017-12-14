@@ -18,7 +18,7 @@ install:
   - gem install coveralls-lcov
 
   # catkin
-  - sudo apt-get install ros-lunar-catkin
+  - sudo apt-get install python-catkin-pkg
 
   - sudo rosdep init
   - rosdep update
