@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 2.8.3)
 project(turtlebot_rrt)
 add_definitions(-std=c++11 -Wall -Werror)
 
-option(COVERALLS "Generate Coveralls Data" OFF)
-
 find_package(catkin REQUIRED 
   COMPONENTS
     roscpp
@@ -16,12 +14,11 @@ find_package(catkin REQUIRED
     visualization_msgs
 )
 
-include_directories(
-  include
-  ${catkin_INCLUDE_DIRS}
-)
+#find_package(Eigen3 REQUIRED)
 
-add_definitions(${EIGEN3_DEFINITIONS})
+include_directories(include ${catkin_INCLUDE_DIRS})
+
+#add_definitions(${EIGEN3_DEFINITIONS})
 
 catkin_package(
   INCLUDE_DIRS include
@@ -41,25 +38,16 @@ add_library(${PROJECT_NAME}
 )
 
 add_dependencies(turtlebot_rrt ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(${PROJECT_NAME}
-  ${catkin_LIBRARIES}
-)
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
 
 # Testing
 if (CATKIN_ENABLE_TESTING)
-  # vertex
   catkin_add_gtest(vertex_test test/vertex_test.cc)
-  target_link_libraries(vertex_test ${catkin_LIBRARIES} ${PROJECT_NAME})
+  catkin_add_gtest(rrt_test test/rrtpath_test.cc)
 
-  # rrt
-  find_package(rostest REQUIRED)
-  add_rostest_gtest(rrt_test test/rrt_test.test test/rrtpath_test.cc)
   target_link_libraries(rrt_test ${PROJECT_NAME} ${catkin_LIBRARIES})
-
-  find_package(catkin REQUIRED COMPONENTS roslint)
-    roslint_cpp(src/turtlebot_rrt.cc src/vertex.cc)
-    roslint_add_test()
+  target_link_libraries(vertex_test ${catkin_LIBRARIES} ${PROJECT_NAME})
 endif (CATKIN_ENABLE_TESTING)
 
 install(TARGETS ${PROJECT_NAME}
