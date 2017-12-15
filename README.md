@@ -27,6 +27,7 @@ cd [workspace]/src
 git clone https://github.com/jeshoward/turtlebot_rrt.git
 cd ..
 catkin_make
+source devel/setup.bash
 ```
 
 ### Dependencies
@@ -39,7 +40,7 @@ catkin_make
 To run the plugin out of the box, follow the steps in the [demo](#demo-steps).
 The plugin uses a static map and is currently only packaged with a single map. To create custom maps follow the instructions [provided here](#creating-custom-maps). Once you have created your map place the ```.world```, ```.yaml```, and ```.pgm``` file into the ```/maps```  directory all using the same file name and then use the ```map_name``` arg with the launch file:
 ```
-roslaunch turtlebot_rrt rrt_planner.launch map_name:="your_map_name"
+roslaunch turtlebot_rrt rrt_planner.launch
 ```
 
 ### Launch file args
