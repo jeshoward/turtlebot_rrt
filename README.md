@@ -1,12 +1,12 @@
 [![Build Status](https://travis-ci.org/jeshoward/turtlebot_rrt.svg?branch=master)](https://travis-ci.org/jeshoward/turtlebot_rrt) Travis Build Status 
 
-[![Coverage Status](https://coveralls.io/repos/github/jeshoward/turtlebot_rrt/badge.svg?branch=master)](https://coveralls.io/github/jeshoward/turtlebot_rrt?branch=master) Coveralls Code Coverage Status 
-
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause) Software License 
 
 
 # Randomly Exploring Random Tree Path Planner ROS Plugin
 This plugin implements a simulated Randomly Exploring Random Tree (RRT) path planner for the Kinetic Kame release of the Robot Operating System (ROS) framework. It uses the nav_core::BaseGlobalPlanner interface and can be used on any platforms that implement the move_base package, but has been specifically tested using the simulated Turtlebot platform.
+
+A presentation on the project can be found on YouTube [here](https://youtu.be/YW-AWwA-fv8). The video provides an overview of the project, UML diagrams, as well as a demo.
 
 ## Table of Contents
 - [Personnel](#personnel)
@@ -75,7 +75,6 @@ These steps assume that you have already cloned the repository, if not see [Inst
 cd [workspace]/src
 catkin_make run_tests && catkin_test_results
 ```
-TODO: Add screenshot of successful tests and link to coveralls test coverage
 
 ## Issues
 Issue tracking sheet can be found with the [Sprint Backlog](https://docs.google.com/spreadsheets/d/11MImRGM0dvr5bSlyq22xXTaM7s8ReXDSpWUyN7IlM3k/edit?usp=sharing) in the Issues tab.
