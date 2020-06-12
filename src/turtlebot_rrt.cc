@@ -36,6 +36,7 @@
 #include <pluginlib/class_list_macros.h>
 #include "turtlebot_rrt/turtlebot_rrt.h"
 #include "turtlebot_rrt/vertex.h"
+#include <iostream>
 
 // Register as a BaseGlobalPlanner plugin
 PLUGINLIB_EXPORT_CLASS(turtlebot_rrt::RRTPlanner, nav_core::BaseGlobalPlanner)
@@ -175,6 +176,7 @@ namespace turtlebot_rrt {
     int goal_index = -1;
     current_iterations_ = 0;
 
+
     // Run until we either find the goal or reach the max iterations
     while (!done && current_iterations_ < max_iterations_) {
       ROS_DEBUG("Finding the path.");
@@ -294,12 +296,16 @@ namespace turtlebot_rrt {
 
   bool RRTPlanner::IsSafe(std::pair<float, float> start_point,
                            std::pair<float, float> end_point) {
-    unsigned int map_x, map_y;
+    unsigned int map_x,
+                 map_y;
 
     // first check to make sure the end point is safe. Saves us processing
     // time if somebody wants to jump into the middle of an obstacle
     costmap_->worldToMap(end_point.first, end_point.second, map_x, map_y);
-    if (!obstacle_map_.at(map_y * map_height_cells_ + map_x))
+    if (map_y > map_width_cells_ || map_x > map_height_cells_)
+        return false;
+    auto is_obs_ = !obstacle_map_.at(map_y * map_height_cells_ + map_x);
+    if (is_obs_)
         return false;
 
     // check the path at intervals of delta for collision
